@@ -6,6 +6,7 @@ use App\Services\AdminDashboardService;
 use App\Services\AdminUserService;
 use App\Services\AdminPharmacyService;
 use App\Services\AdminOrderService;
+use App\Services\AdminPenaltyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,6 +19,7 @@ class AdminController extends Controller
   protected AdminUserService $userService;
   protected AdminPharmacyService $pharmacyService;
   protected AdminOrderService $orderService;
+  protected AdminPenaltyService $penaltyService;
 
   /**
    * Verificar que el usuario tenga rol de administrador
@@ -26,12 +28,14 @@ class AdminController extends Controller
     AdminDashboardService $dashboardService,
     AdminUserService $userService,
     AdminPharmacyService $pharmacyService,
-    AdminOrderService $orderService
+    AdminOrderService $orderService,
+    AdminPenaltyService $penaltyService
   ) {
     $this->dashboardService = $dashboardService;
     $this->userService = $userService;
     $this->pharmacyService = $pharmacyService;
     $this->orderService = $orderService;
+    $this->penaltyService = $penaltyService;
 
     $this->middleware(function ($request, $next) {
       /** @var \App\Models\User|null $user */
@@ -190,27 +194,27 @@ class AdminController extends Controller
     $filters = [
       'search' => $request->get('search'),
       'status' => $request->get('status'),
-      'severity' => $request->get('severity'),
-      'pharmacy' => $request->get('pharmacy'),
       'per_page' => $request->get('per_page', 10),
     ];
 
-    // Mock stats for now
-    $stats = [
-      'total_penalties' => 48,
-      'active_penalties' => 15,
-      'resolved_penalties' => 33,
-      'avg_resolution_days' => 5.2
-    ];
+    $data = $this->penaltyService->getPenaltiesList($filters, $filters['per_page']);
 
     if ($request->wantsJson()) {
       return response()->json([
-        'html' => view('admin.partials.penalties-content', compact('filters', 'stats'))->render(),
+        'html' => view('admin.partials.penalties-content', [
+          'penalties' => $data['penalties'],
+          'stats' => $data['stats'],
+          'filters' => $filters,
+        ])->render(),
         'title' => __('admin.penalties.title')
       ]);
     }
 
-    return view('admin.penalties', compact('filters', 'stats'));
+    return view('admin.penalties', [
+      'penalties' => $data['penalties'],
+      'stats' => $data['stats'],
+      'filters' => $filters,
+    ]);
   }
 
   /**

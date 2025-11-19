@@ -52,4 +52,21 @@ class Paciente extends Model
   {
     return $this->user->apellido ?? null;
   }
+
+  public function penalties(): HasMany
+  {
+    return $this->hasMany(PatientPenalty::class, 'patient_id', 'user_id');
+  }
+
+  /**
+   * Recalculate and save the total penalty amount based on active penalties.
+   */
+  public function recalculateTotalPenalty(): void
+  {
+    $total = $this->penalties()
+      ->where('status', 'active')
+      ->sum('amount');
+
+    $this->update(['monto_penalizacion' => $total]);
+  }
 }
