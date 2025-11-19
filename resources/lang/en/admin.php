@@ -145,6 +145,7 @@ return [
       'completed' => 'Completed',
       'cancelled' => 'Cancelled',
     ],
+    'no_results' => 'No orders found',
     'table' => [
       'order_id' => 'Order ID',
       'patient' => 'Patient',
@@ -167,6 +168,11 @@ return [
     'avg_resolution_time' => 'Average Resolution Time',
     'search_placeholder' => 'Search by ID or pharmacy...',
     'filter_status' => 'Filter by Status',
+    'status' => [
+      'active' => 'Active',
+      'paid' => 'Paid',
+      'waived' => 'Waived',
+    ],
     'filter_severity' => 'Filter by Severity',
     'filter_pharmacy' => 'Filter by Pharmacy',
     'branch_number' => 'Branch :number',
@@ -176,12 +182,7 @@ return [
       'high' => 'High',
       'critical' => 'Critical',
     ],
-    'status' => [
-      'active' => 'Active',
-      'under_review' => 'Under Review',
-      'resolved' => 'Resolved',
-      'dismissed' => 'Dismissed',
-    ],
+    'no_results' => 'No penalties found',
     'table' => [
       'id' => 'ID',
       'pharmacy' => 'Pharmacy',

@@ -18,32 +18,38 @@ class DatabaseSeeder extends Seeder
   public function run(): void
   {
     // Create Users
-    User::factory(10)->create();
+    // $this->call([
+    //   PenaltySeeder::class,
+    // ]);
 
     // Create specific test users
     $adminUser = User::factory()->create([
-      'nombre' => 'Admin User',
+      'nombre' => 'Admin',
+      'apellido' => 'User',
       'correo' => 'admin@example.com',
       'direccion' => '123 Admin St',
       'password' => Hash::make('Admin123!'),
     ]);
 
     $pacienteUser1 = User::factory()->create([
-      'nombre' => 'Juan Pérez',
+      'nombre' => 'Juan',
+      'apellido' => 'Pérez',
       'correo' => 'juan@example.com',
       'direccion' => '456 Patient Ave',
       'password' => Hash::make('Patient123!'),
     ]);
 
     $pacienteUser2 = User::factory()->create([
-      'nombre' => 'María García',
+      'nombre' => 'María',
+      'apellido' => 'García',
       'correo' => 'maria@example.com',
       'direccion' => '789 Health Blvd',
       'password' => Hash::make('Maria123!'),
     ]);
 
     $empleadoUser1 = User::factory()->create([
-      'nombre' => 'Pedro Farmacéutico',
+      'nombre' => 'Pedro',
+      'apellido' => 'Farmacéutico',
       'correo' => 'pedro@example.com',
       'direccion' => '321 Employee Rd',
       'password' => Hash::make('Pharmacy123!'),
@@ -181,6 +187,11 @@ class DatabaseSeeder extends Seeder
       ['user_id' => $pacienteUser2->user_id, 'tipo' => 'penalizacion', 'mensaje' => 'Tiene una penalización pendiente de $50.00', 'fecha_hora' => now()->subDay(), 'leida' => false],
       ['user_id' => $pacienteUser2->user_id, 'tipo' => 'pedido', 'mensaje' => 'Su pedido está en proceso', 'fecha_hora' => now()->subDay(), 'leida' => false],
       ['user_id' => $adminUser->user_id, 'tipo' => 'sistema', 'mensaje' => 'Nuevo pedido registrado en el sistema', 'fecha_hora' => now()->subDay(), 'leida' => true],
+    ]);
+
+    // Run Penalty Seeder after patients are created
+    $this->call([
+      PenaltySeeder::class,
     ]);
   }
 }

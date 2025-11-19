@@ -18,7 +18,8 @@ class UserFactory extends Factory
   public function definition(): array
   {
     return [
-      'nombre' => fake()->name(),
+      'nombre' => fake()->firstName(),
+      'apellido' => fake()->lastName(),
       'correo' => fake()->unique()->safeEmail(),
       'direccion' => fake()->address(),
       'password' => Hash::make('password'),
@@ -31,7 +32,8 @@ class UserFactory extends Factory
   public function demo(): static
   {
     return $this->state(fn(array $attributes) => [
-      'nombre' => 'Demo User',
+      'nombre' => 'Demo',
+      'apellido' => 'User',
       'correo' => 'demo@example.com',
       'direccion' => '123 Demo Street',
       'password' => Hash::make('password'),

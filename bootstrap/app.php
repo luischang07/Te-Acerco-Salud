@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
     // Agregar middleware de logging de seguridad globalmente
     $middleware->append(\App\Http\Middleware\LogSecurityEvents::class);
+
+    $middleware->web(append: [
+      \App\Http\Middleware\SetLocale::class,
+    ]);
   })
   ->withExceptions(function (): void {
     //

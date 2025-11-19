@@ -36,4 +36,37 @@ class Paciente extends Model
   {
     return $this->hasMany(Notificacion::class, 'user_id', 'user_id');
   }
+
+  /**
+   * Get the patient's first name from the associated user
+   */
+  public function getNombreAttribute(): ?string
+  {
+    return $this->user->nombre ?? null;
+  }
+
+  /**
+   * Get the patient's last name from the associated user
+   */
+  public function getApellidoAttribute(): ?string
+  {
+    return $this->user->apellido ?? null;
+  }
+
+  public function penalties(): HasMany
+  {
+    return $this->hasMany(PatientPenalty::class, 'patient_id', 'user_id');
+  }
+
+  /**
+   * Recalculate and save the total penalty amount based on active penalties.
+   */
+  public function recalculateTotalPenalty(): void
+  {
+    $total = $this->penalties()
+      ->where('status', 'active')
+      ->sum('amount');
+
+    $this->update(['monto_penalizacion' => $total]);
+  }
 }

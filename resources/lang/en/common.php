@@ -1,6 +1,7 @@
 <?php
 
 return [
+  'brand' => 'Te Acerco Salud',
   // Navigation
   'navbar' => [
     'home' => 'Home',
@@ -18,7 +19,6 @@ return [
 
   // Footer
   'footer' => [
-    'title' => 'Te Acerco Salud',
     'description' => 'Your health, our priority',
     'home' => 'Home',
     'features' => 'Features',
