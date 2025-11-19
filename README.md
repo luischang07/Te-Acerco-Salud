@@ -1,57 +1,93 @@
-# Security Access
+# Te Acerco Salud (TAS)
 
-## Acerca de la aplicación
+## Planteamiento del Problema
 
-Security Access es una aplicación web de gestión de acceso y seguridad construida con PHP. Esta aplicación proporciona un sistema robusto de autenticación y control de acceso con las siguientes características:
+En el sector salud, uno de los principales retos que enfrentan los pacientes es el surtido completo de sus recetas médicas. La fragmentación del inventario entre distintas cadenas de farmacias obliga a los pacientes a recorrer múltiples sucursales, generando pérdida de tiempo, costos adicionales y riesgos para su salud al retrasar tratamientos.
 
--   **Sistema de autenticación seguro** con verificación por email
--   **Gestión de sesiones únicas** para prevenir múltiples inicios de sesión
--   **Control de bloqueo de cuentas** con sistema de reintento automático
--   **Interfaz de usuario responsive** y moderna
--   **Integración con servicios de email** para notificaciones de seguridad
--   **Dashboard de administración** con métricas de seguridad
--   **Integración con Supabase** para almacenamiento en la nube
+**Te Acerco Salud (TAS)** es una solución tecnológica diseñada para conectar pacientes y farmacias, permitiendo:
+- Seleccionar la sucursal más conveniente.
+- Cargar recetas médicas digitales.
+- Garantizar la disponibilidad de medicamentos mediante un sistema de colaboración entre cadenas.
+- Surtir productos faltantes desde farmacias cercanas automáticamente.
 
-## Características principales
+## Objetivos
+- Optimizar la experiencia del paciente.
+- Mejorar la coordinación entre farmacias.
+- Reducir barreras para el acceso oportuno a tratamientos médicos.
 
--   **Autenticación por email**: Sistema de verificación por correo electrónico para mayor seguridad
--   **Sesión única**: Previene múltiples sesiones activas del mismo usuario
--   **Bloqueo temporal**: Sistema de bloqueo automático tras intentos fallidos de login
--   **Notificaciones**: Emails automáticos para eventos de seguridad importantes
--   **Dashboard moderno**: Interfaz limpia y funcional para administración
--   **API REST**: Integración con servicios externos a través de API
+## Características Principales
+- **Registro de Pacientes**: Gestión de usuarios y perfiles médicos.
+- **Red de Farmacias**: Registro de cadenas y sucursales colaborativas.
+- **Gestión de Inventarios**: Actualización en tiempo real para garantizar disponibilidad.
+- **Surtido Inteligente**: Algoritmo para completar recetas buscando en la red de farmacias cercanas.
+- **Dashboard Administrativo**: Panel para empleados y administradores (cotizaciones, rastreos, reportes).
 
-## Instalación
+## Instalación y Configuración
 
-1. Clona el repositorio
-2. Instala las dependencias: `composer install`
-3. Configura el archivo `.env` con tus credenciales de base de datos
-4. Ejecuta las migraciones: `php artisan migrate`
-5. Inicia el servidor: `php artisan serve`
+Sigue estos pasos para levantar el proyecto en tu entorno local:
 
-## Configuración
+### Prerrequisitos
+- PHP >= 8.1
+- Composer
+- Node.js & NPM
+- MySQL / MariaDB
 
-La aplicación requiere configuración de:
+### Pasos
+1.  **Clonar el repositorio**
+    ```bash
+    git clone <url-del-repositorio>
+    cd security-access
+    ```
 
--   Base de datos (MySQL/PostgreSQL)
--   Servicio de email (Mailtrap.io recomendado para desarrollo)
--   Supabase (opcional, para funcionalidades en la nube)
+2.  **Instalar dependencias de PHP**
+    ```bash
+    composer install
+    ```
 
-## Uso
+3.  **Instalar dependencias de Frontend**
+    ```bash
+    npm install
+    ```
 
-1. Accede a la aplicación a través del navegador
-2. Regístrate con tu email
-3. Verifica tu cuenta a través del email recibido
-4. Inicia sesión y accede al dashboard
+4.  **Configurar entorno**
+    - Copia el archivo de ejemplo:
+      ```bash
+      cp .env.example .env
+      ```
+    - Configura tus credenciales de base de datos en el archivo `.env`:
+      ```env
+      DB_CONNECTION=mysql
+      DB_HOST=127.0.0.1
+      DB_PORT=3306
+      DB_DATABASE=nombre_de_tu_bd
+      DB_USERNAME=tu_usuario
+      DB_PASSWORD=tu_password
+      ```
 
-## Tecnologías utilizadas
+5.  **Generar clave de aplicación**
+    ```bash
+    php artisan key:generate
+    ```
 
--   **Backend**: PHP con arquitectura MVC
--   **Frontend**: HTML, CSS, JavaScript modular
--   **Base de datos**: MySQL/PostgreSQL
--   **Email**: Integración con proveedores SMTP
--   **Cloud**: Supabase para servicios adicionales
+6.  **Ejecutar migraciones**
+    ```bash
+    php artisan migrate
+    ```
+    *(Opcional: `php artisan migrate --seed` para cargar datos de prueba)*
 
-## Licencia
+7.  **Compilar activos**
+    ```bash
+    npm run dev
+    ```
 
-Este proyecto está licenciado bajo la [Licencia MIT](https://opensource.org/licenses/MIT).
+8.  **Iniciar servidor local**
+    ```bash
+    php artisan serve
+    ```
+
+¡Listo! Accede a `http://localhost:8000` en tu navegador.
+
+## Tecnologías
+- **Backend**: Laravel 12
+- **Frontend**: Blade, Alpine.js, Tailwind CSS
+- **Base de Datos**: MySQL
