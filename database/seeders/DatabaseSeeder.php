@@ -33,7 +33,6 @@ class DatabaseSeeder extends Seeder
 
     $pacienteUser1 = User::factory()->create([
       'nombre' => 'Juan',
-      'apellido' => 'Pérez',
       'correo' => 'juan@example.com',
       'direccion' => '456 Patient Ave',
       'password' => Hash::make('Patient123!'),
@@ -41,7 +40,6 @@ class DatabaseSeeder extends Seeder
 
     $pacienteUser2 = User::factory()->create([
       'nombre' => 'María',
-      'apellido' => 'García',
       'correo' => 'maria@example.com',
       'direccion' => '789 Health Blvd',
       'password' => Hash::make('Maria123!'),
@@ -49,7 +47,6 @@ class DatabaseSeeder extends Seeder
 
     $empleadoUser1 = User::factory()->create([
       'nombre' => 'Pedro',
-      'apellido' => 'Farmacéutico',
       'correo' => 'pedro@example.com',
       'direccion' => '321 Employee Rd',
       'password' => Hash::make('Pharmacy123!'),
@@ -73,21 +70,21 @@ class DatabaseSeeder extends Seeder
     DB::table('cadena_farmaceuticas')->insert([
       'cadena_id' => $cadena1,
       'razon_social' => 'Farmacias del Ahorro SA',
-      'name' => 'Del Ahorro',
+      'nombre' => 'Del Ahorro',
     ]);
 
     $cadena2 = 'CAD002';
     DB::table('cadena_farmaceuticas')->insert([
       'cadena_id' => $cadena2,
       'razon_social' => 'Farmacias Guadalajara SA',
-      'name' => 'Guadalajara',
+      'nombre' => 'Guadalajara',
     ]);
 
     $cadena3 = 'CAD003';
     DB::table('cadena_farmaceuticas')->insert([
       'cadena_id' => $cadena3,
       'razon_social' => 'Farmacias Similares SA',
-      'name' => 'Similares',
+      'nombre' => 'Similares',
     ]);
     
 
@@ -163,16 +160,16 @@ class DatabaseSeeder extends Seeder
 
     // Create Lineas Pedidos
     DB::table('lineas_pedidos')->insert([
-      ['folio_pedido' => $pedido1, 'linea_id' => 1, 'medicamento_id' => 1, 'cantidad_solicitada' => 2, 'precio_unitario' => 50.00],
-      ['folio_pedido' => $pedido1, 'linea_id' => 2, 'medicamento_id' => 2, 'cantidad_solicitada' => 3, 'precio_unitario' => 75.00],
-      ['folio_pedido' => $pedido2, 'linea_id' => 1, 'medicamento_id' => 3, 'cantidad_solicitada' => 1, 'precio_unitario' => 180.00],
+      ['folio_pedido' => $pedido1, 'id_liena_pedido' => 1, 'medicamento_id' => 1, 'cantidad_solicitada' => 2, 'precio_unitario' => 50.00],
+      ['folio_pedido' => $pedido1, 'id_liena_pedido' => 2, 'medicamento_id' => 2, 'cantidad_solicitada' => 3, 'precio_unitario' => 75.00],
+      ['folio_pedido' => $pedido2, 'id_liena_pedido' => 1, 'medicamento_id' => 3, 'cantidad_solicitada' => 1, 'precio_unitario' => 180.00],
     ]);
 
     // Create Detalle Lineas Pedidos
     DB::table('detalle_lineas_pedidos')->insert([
-      ['folio_pedido' => $pedido1, 'linea_id' => 1, 'cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 2, 'cantidad_recolectada' => 2],
-      ['folio_pedido' => $pedido1, 'linea_id' => 2, 'cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 3, 'cantidad_recolectada' => 3],
-      ['folio_pedido' => $pedido2, 'linea_id' => 1, 'cadena_id' => $cadena2, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 1, 'cantidad_recolectada' => 0],
+      ['folio_pedido' => $pedido1, 'id_liena_pedido' => 1, 'cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 2, 'cantidad_recolectada' => 2],
+      ['folio_pedido' => $pedido1, 'id_liena_pedido' => 2, 'cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 3, 'cantidad_recolectada' => 3],
+      ['folio_pedido' => $pedido2, 'id_liena_pedido' => 1, 'cadena_id' => $cadena2, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 1, 'cantidad_recolectada' => 0],
     ]);
 
     // Create Ruta Recoleccion

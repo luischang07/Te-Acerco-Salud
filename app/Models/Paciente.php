@@ -48,10 +48,6 @@ class Paciente extends Model
   /**
    * Get the patient's last name from the associated user
    */
-  public function getApellidoAttribute(): ?string
-  {
-    return $this->user->apellido ?? null;
-  }
 
   public function penalties(): HasMany
   {

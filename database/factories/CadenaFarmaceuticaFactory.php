@@ -10,7 +10,7 @@ class CadenaFarmaceuticaFactory extends Factory
   {
     return [
       'razon_social' => $this->faker->company(),
-      'name' => $this->faker->companySuffix() . ' Pharmacy',
+      'nombre' => $this->faker->companySuffix() . ' Pharmacy',
     ];
   }
 }

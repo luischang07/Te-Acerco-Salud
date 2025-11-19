@@ -19,7 +19,6 @@ class UserFactory extends Factory
   {
     return [
       'nombre' => fake()->firstName(),
-      'apellido' => fake()->lastName(),
       'correo' => fake()->unique()->safeEmail(),
       'direccion' => fake()->address(),
       'password' => Hash::make('password'),
@@ -33,7 +32,6 @@ class UserFactory extends Factory
   {
     return $this->state(fn(array $attributes) => [
       'nombre' => 'Demo',
-      'apellido' => 'User',
       'correo' => 'demo@example.com',
       'direccion' => '123 Demo Street',
       'password' => Hash::make('password'),
