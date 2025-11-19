@@ -9,7 +9,7 @@ return new class extends Migration
   public function up(): void
   {
     Schema::create('detalle_lineas_pedidos', function (Blueprint $table) {
-      $table->unsignedBigInteger('folio_pedido');
+      $table->integer('folio_pedido');
       $table->unsignedBigInteger('id_linea_pedido');
       $table->string('cadena_id', 50);
       $table->string('sucursal_id', 50);
@@ -17,10 +17,10 @@ return new class extends Migration
       $table->integer('cantidad_surtida');
       $table->integer('estatus')->default(0);
 
-      $table->primary(['folio_pedido', 'linea_id'], 'detalle_lineas_pedidos_primary');
+      $table->primary(['folio_pedido', 'id_linea_pedido'], 'detalle_lineas_pedidos_primary');
 
-      $table->foreign(['folio_pedido', 'linea_id'])
-        ->references(['folio_pedido', 'linea_id'])
+      $table->foreign(['folio_pedido', 'id_linea_pedido'])
+        ->references(['folio_pedido', 'id_linea_pedido'])
         ->on('lineas_pedidos');
 
       $table->foreign(['cadena_id', 'sucursal_id'])
