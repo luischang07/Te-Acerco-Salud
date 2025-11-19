@@ -9,6 +9,7 @@ class UserEntity
 {
   private int $id;
   private string $nombre;
+  private string $apellido;
   private string $correo;
   private string $direccion;
   private ?string $sessionToken;
@@ -26,6 +27,7 @@ class UserEntity
   {
     $this->id = $user->user_id;
     $this->nombre = $user->nombre;
+    $this->apellido = $user->apellido;
     $this->correo = $user->correo;
     $this->direccion = $user->direccion;
     $this->sessionToken = $user->session_token;
@@ -48,6 +50,11 @@ class UserEntity
   public function getNombre(): string
   {
     return $this->nombre;
+  }
+
+  public function getApellido(): string
+  {
+    return $this->apellido;
   }
 
   public function getCorreo(): string
@@ -182,6 +189,7 @@ class UserEntity
     return [
       'user_id' => $this->id,
       'nombre' => $this->nombre,
+      'apellido' => $this->apellido,
       'correo' => $this->correo,
       'direccion' => $this->direccion,
       'session_token' => $this->sessionToken,

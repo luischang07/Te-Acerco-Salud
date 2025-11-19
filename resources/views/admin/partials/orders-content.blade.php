@@ -82,11 +82,11 @@
         <select name="status" x-model="filters.status"
           class="w-full px-4 py-2 rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark text-body-text dark:text-body-text-dark focus:outline-none focus:ring-2 focus:ring-primary">
           <option value="">{{ __('common.filters.all') }}</option>
-          <option value="pending">{{ __('admin.orders.status.pending') }}</option>
-          <option value="in_progress">{{ __('admin.orders.status.in_progress') }}</option>
-          <option value="ready">{{ __('admin.orders.status.ready') }}</option>
-          <option value="completed">{{ __('admin.orders.status.completed') }}</option>
-          <option value="cancelled">{{ __('admin.orders.status.cancelled') }}</option>
+          <option value="pendiente">{{ __('admin.orders.status.pending') }}</option>
+          <option value="en_proceso">{{ __('admin.orders.status.in_progress') }}</option>
+          <option value="listo">{{ __('admin.orders.status.ready') }}</option>
+          <option value="completado">{{ __('admin.orders.status.completed') }}</option>
+          <option value="cancelado">{{ __('admin.orders.status.cancelled') }}</option>
         </select>
       </div>
       <div>
@@ -96,9 +96,9 @@
         <select name="pharmacy" x-model="filters.pharmacy"
           class="w-full px-4 py-2 rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark text-body-text dark:text-body-text-dark focus:outline-none focus:ring-2 focus:ring-primary">
           <option value="">{{ __('common.filters.all') }}</option>
-          <option value="1">Farmacia del Ahorro</option>
-          <option value="2">Farmacias Guadalajara</option>
-          <option value="3">Farmacias Similares</option>
+          @foreach ($chains as $chainId => $chainName)
+            <option value="{{ $chainId }}">{{ $chainName }}</option>
+          @endforeach
         </select>
       </div>
       <div>
@@ -107,10 +107,10 @@
         </label>
         <select name="date" x-model="filters.date"
           class="w-full px-4 py-2 rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark text-body-text dark:text-body-text-dark focus:outline-none focus:ring-2 focus:ring-primary">
+          <option value="">{{ __('common.filters.all') }}</option>
           <option value="today">{{ __('admin.orders.date_today') }}</option>
           <option value="week">{{ __('admin.orders.date_week') }}</option>
           <option value="month">{{ __('admin.orders.date_month') }}</option>
-          <option value="custom">{{ __('admin.orders.date_custom') }}</option>
         </select>
       </div>
       <div class="flex items-end">
@@ -166,107 +166,114 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-border-light dark:divide-border-dark">
-        @for ($i = 1; $i <= 15; $i++)
+        @forelse ($orders as $order)
           @php
-            $statuses = ['pending', 'in_progress', 'ready', 'completed', 'cancelled'];
-            $statusIndex = $i % 5;
             $statusColors = [
-              'pending' => 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200',
-              'in_progress' => 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
-              'ready' => 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200',
-              'completed' => 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
-              'cancelled' => 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200',
+              'pendiente' => 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200',
+              'en_proceso' => 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
+              'listo' => 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200',
+              'completado' => 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
+              'cancelado' => 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200',
             ];
+            $statusKey = strtolower($order->estado);
+            $statusColor = $statusColors[$statusKey] ?? 'bg-gray-100 text-gray-800';
           @endphp
           <tr class="hover:bg-background-light dark:hover:bg-background-dark transition-colors">
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="text-sm font-medium text-primary">
-                #ORD-{{ str_pad($i * 100, 5, '0', STR_PAD_LEFT) }}
+                {{ $order->pedido_id }}
               </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex items-center">
                 <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span class="text-primary text-xs font-medium">P{{ $i }}</span>
+                  <span class="text-primary text-xs font-medium">
+                    {{ substr($order->paciente->nombre ?? 'U', 0, 1) }}
+                  </span>
                 </div>
                 <div class="ml-3">
                   <div class="text-sm font-medium text-body-text dark:text-body-text-dark">
-                    {{ __('admin.orders.patient_name', ['number' => $i]) }}
+                    {{ $order->paciente->nombre ?? 'N/A' }} {{ $order->paciente->apellido ?? 'N/A' }}
                   </div>
                 </div>
               </div>
             </td>
             <td class="px-6 py-4">
               <div class="text-sm text-body-text dark:text-body-text-dark">
-                @if ($i % 3 == 0)
-                  Farmacia del Ahorro
-                @elseif($i % 2 == 0)
-                  Farmacias Guadalajara
-                @else
-                  Farmacias Similares
-                @endif
+                {{ $order->sucursal->nombre ?? 'N/A' }}
               </div>
               <div class="text-xs text-neutral-text dark:text-neutral-text-dark">
-                {{ __('admin.orders.branch_number', ['number' => $i]) }}
+                {{ $order->sucursal->cadena->name ?? 'Cadena N/A' }}
               </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="text-sm text-body-text dark:text-body-text-dark">
-                {{ rand(1, 8) }} {{ __('admin.orders.items') }}
+                {{ $order->lineasPedidos->count() }} {{ __('admin.orders.items') }}
               </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="text-sm font-medium text-body-text dark:text-body-text-dark">
-                ${{ number_format(rand(150, 2500), 2) }}
+                ${{ number_format($order->costo_total, 2) }}
               </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
-              <span
-                class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusColors[$statuses[$statusIndex]] }}">
-                {{ __('admin.orders.status.' . $statuses[$statusIndex]) }}
+              <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusColor }}">
+                {{ ucfirst($order->estado) }}
               </span>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="text-sm text-body-text dark:text-body-text-dark">
-                {{ now()->subHours($i * 2)->format('M d, H:i') }}
+                {{ $order->fecha_pedido ? $order->fecha_pedido->format('M d, Y') : 'N/A' }}
               </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
               <button class="text-primary hover:text-primary/80">{{ __('common.actions.view') }}</button>
             </td>
           </tr>
-        @endfor
+        @empty
+          <tr>
+            <td colspan="8" class="px-6 py-12 text-center">
+              <div class="text-neutral-text dark:text-neutral-text-dark">
+                {{ __('admin.orders.no_results') }}
+              </div>
+            </td>
+          </tr>
+        @endforelse
       </tbody>
     </table>
   </div>
 
   <!-- Pagination -->
-  <div class="px-6 py-4 border-t border-border-light dark:border-border-dark">
-    <div class="flex items-center justify-between">
+  <div x-data="adminPagination({{ json_encode($orders) }})"
+    class="px-6 py-4 border-t border-border-light dark:border-border-dark">
+    <div class="flex items-center justify-between flex-wrap gap-4">
       <div class="text-sm text-neutral-text dark:text-neutral-text-dark">
-        {{ __('common.pagination.showing') }} <span class="font-medium">1</span>
-        {{ __('common.pagination.to') }} <span class="font-medium">15</span>
-        {{ __('common.pagination.of') }} <span class="font-medium">1,524</span>
+        {{ __('common.pagination.showing') }} <span class="font-medium" x-text="pagination.from"></span>
+        {{ __('common.pagination.to') }} <span class="font-medium" x-text="pagination.to"></span>
+        {{ __('common.pagination.of') }} <span class="font-medium" x-text="pagination.total"></span>
         {{ __('common.pagination.results') }}
       </div>
+      <div class="flex items-center gap-2">
+        <label class="text-sm text-neutral-text dark:text-neutral-text-dark">
+          {{ __('common.filters.per_page') }}:
+        </label>
+        <select x-model="perPage" @change="changePerPage()"
+          class="px-3 py-1 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-body-text dark:text-body-text-dark focus:outline-none focus:ring-2 focus:ring-primary">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+      </div>
       <div class="flex gap-2">
-        <button
-          class="px-3 py-1 rounded-lg border border-border-light dark:border-border-dark text-neutral-text dark:text-neutral-text-dark hover:bg-background-light dark:hover:bg-background-dark">
-          {{ __('common.pagination.previous') }}
-        </button>
-        <button class="px-3 py-1 rounded-lg bg-primary text-white">1</button>
-        <button
-          class="px-3 py-1 rounded-lg border border-border-light dark:border-border-dark text-neutral-text dark:text-neutral-text-dark hover:bg-background-light dark:hover:bg-background-dark">
-          2
-        </button>
-        <button
-          class="px-3 py-1 rounded-lg border border-border-light dark:border-border-dark text-neutral-text dark:text-neutral-text-dark hover:bg-background-light dark:hover:bg-background-dark">
-          3
-        </button>
-        <button
-          class="px-3 py-1 rounded-lg border border-border-light dark:border-border-dark text-neutral-text dark:text-neutral-text-dark hover:bg-background-light dark:hover:bg-background-dark">
-          {{ __('common.pagination.next') }}
-        </button>
+        <template x-for="link in pagination.links" :key="link.label">
+          <button @click="changePage(link.url)" :disabled="!link.url" :class="{
+                            'bg-primary text-white': link.active,
+                            'border border-border-light dark:border-border-dark text-neutral-text dark:text-neutral-text-dark hover:bg-background-light dark:hover:bg-background-dark':
+                                !link.active,
+                            'opacity-50 cursor-not-allowed': !link.url
+                        }" class="px-3 py-1 rounded-lg transition-colors" x-html="link.label">
+          </button>
+        </template>
       </div>
     </div>
   </div>

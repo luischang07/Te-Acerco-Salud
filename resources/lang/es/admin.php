@@ -145,6 +145,7 @@ return [
       'completed' => 'Completado',
       'cancelled' => 'Cancelado',
     ],
+    'no_results' => 'No se encontraron pedidos',
     'table' => [
       'order_id' => 'ID Pedido',
       'patient' => 'Paciente',

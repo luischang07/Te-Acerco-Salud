@@ -10,6 +10,7 @@ use App\Http\Controllers\PrescriptionController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'landing')->name('landing');
+Route::get('lang/{locale}', [App\Http\Controllers\LanguageController::class, 'switch'])->name('lang.switch');
 
 Route::middleware('guest')->group(function (): void {
   Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
