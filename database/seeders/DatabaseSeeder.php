@@ -25,32 +25,28 @@ class DatabaseSeeder extends Seeder
       'nombre' => 'Admin User',
       'correo' => 'admin@example.com',
       'direccion' => '123 Admin St',
-      'password' => Hash::make('password'),
-      'nip' => '1234',
+      'password' => Hash::make('Admin123!'),
     ]);
 
     $pacienteUser1 = User::factory()->create([
       'nombre' => 'Juan Pérez',
       'correo' => 'juan@example.com',
       'direccion' => '456 Patient Ave',
-      'password' => Hash::make('password'),
-      'nip' => '4567',
+      'password' => Hash::make('Patient123!'),
     ]);
 
     $pacienteUser2 = User::factory()->create([
       'nombre' => 'María García',
       'correo' => 'maria@example.com',
       'direccion' => '789 Health Blvd',
-      'password' => Hash::make('password'),
-      'nip' => '7890',
+      'password' => Hash::make('Maria123!'),
     ]);
 
     $empleadoUser1 = User::factory()->create([
       'nombre' => 'Pedro Farmacéutico',
       'correo' => 'pedro@example.com',
       'direccion' => '321 Employee Rd',
-      'password' => Hash::make('password'),
-      'nip' => '3210',
+      'password' => Hash::make('Pharmacy123!'),
     ]);
 
     // Create Administradores
@@ -67,35 +63,41 @@ class DatabaseSeeder extends Seeder
     ]);
 
     // Create Cadena Farmaceuticas
-    $cadena1 = DB::table('cadena_farmaceuticas')->insertGetId([
+    $cadena1 = 'CAD001';
+    DB::table('cadena_farmaceuticas')->insert([
+      'cadena_id' => $cadena1,
       'razon_social' => 'Farmacias del Ahorro SA',
       'name' => 'Del Ahorro',
-    ], 'cadena_id');
+    ]);
 
-    $cadena2 = DB::table('cadena_farmaceuticas')->insertGetId([
+    $cadena2 = 'CAD002';
+    DB::table('cadena_farmaceuticas')->insert([
+      'cadena_id' => $cadena2,
       'razon_social' => 'Farmacias Guadalajara SA',
       'name' => 'Guadalajara',
-    ], 'cadena_id');
+    ]);
 
-    $cadena3 = DB::table('cadena_farmaceuticas')->insertGetId([
+    $cadena3 = 'CAD003';
+    DB::table('cadena_farmaceuticas')->insert([
+      'cadena_id' => $cadena3,
       'razon_social' => 'Farmacias Similares SA',
       'name' => 'Similares',
-    ], 'cadena_id');
+    ]);
 
     // Create Sucursales
     DB::table('sucursales')->insert([
-      ['cadena_id' => $cadena1, 'sucursal_id' => 1, 'nombre' => 'Del Ahorro Centro', 'direccion' => 'Av. Principal 123', 'latitud' => 19.4326, 'longitud' => -99.1332],
-      ['cadena_id' => $cadena1, 'sucursal_id' => 2, 'nombre' => 'Del Ahorro Norte', 'direccion' => 'Calle Norte 456', 'latitud' => 19.4500, 'longitud' => -99.1500],
-      ['cadena_id' => $cadena2, 'sucursal_id' => 1, 'nombre' => 'Guadalajara Sur', 'direccion' => 'Blvd. Sur 789', 'latitud' => 19.4000, 'longitud' => -99.1200],
-      ['cadena_id' => $cadena2, 'sucursal_id' => 2, 'nombre' => 'Guadalajara Este', 'direccion' => 'Av. Este 321', 'latitud' => 19.4200, 'longitud' => -99.1000],
-      ['cadena_id' => $cadena3, 'sucursal_id' => 1, 'nombre' => 'Similares Oeste', 'direccion' => 'Calle Oeste 654', 'latitud' => 19.4100, 'longitud' => -99.1600],
+      ['cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'nombre' => 'Del Ahorro Centro', 'calle' => 'Av. Principal', 'numero_ext' => '123', 'numero_int' => null, 'colonia' => 'Centro', 'latitud' => 19.4326, 'longitud' => -99.1332],
+      ['cadena_id' => $cadena1, 'sucursal_id' => 'SUC002', 'nombre' => 'Del Ahorro Norte', 'calle' => 'Calle Norte', 'numero_ext' => '456', 'numero_int' => null, 'colonia' => 'Norte', 'latitud' => 19.4500, 'longitud' => -99.1500],
+      ['cadena_id' => $cadena2, 'sucursal_id' => 'SUC001', 'nombre' => 'Guadalajara Sur', 'calle' => 'Blvd. Sur', 'numero_ext' => '789', 'numero_int' => null, 'colonia' => 'Sur', 'latitud' => 19.4000, 'longitud' => -99.1200],
+      ['cadena_id' => $cadena2, 'sucursal_id' => 'SUC002', 'nombre' => 'Guadalajara Este', 'calle' => 'Av. Este', 'numero_ext' => '321', 'numero_int' => null, 'colonia' => 'Este', 'latitud' => 19.4200, 'longitud' => -99.1000],
+      ['cadena_id' => $cadena3, 'sucursal_id' => 'SUC001', 'nombre' => 'Similares Oeste', 'calle' => 'Calle Oeste', 'numero_ext' => '654', 'numero_int' => null, 'colonia' => 'Oeste', 'latitud' => 19.4100, 'longitud' => -99.1600],
     ]);
 
     // Create Empleados
     DB::table('empleados')->insert([
       'user_id' => $empleadoUser1->user_id,
       'cadena_id' => $cadena1,
-      'sucursal_id' => 1,
+      'sucursal_id' => 'SUC001',
       'fecha_ingreso' => now()->subYears(2),
     ]);
 
@@ -134,7 +136,7 @@ class DatabaseSeeder extends Seeder
     $pedido1 = DB::table('pedidos')->insertGetId([
       'paciente_id' => $pacienteUser1->user_id,
       'cadena_id' => $cadena1,
-      'sucursal_id' => 1,
+      'sucursal_id' => 'SUC001',
       'fecha_pedido' => now()->subDays(5),
       'fecha_entrega' => now()->subDays(2),
       'estado' => 'completado',
@@ -144,7 +146,7 @@ class DatabaseSeeder extends Seeder
     $pedido2 = DB::table('pedidos')->insertGetId([
       'paciente_id' => $pacienteUser2->user_id,
       'cadena_id' => $cadena2,
-      'sucursal_id' => 1,
+      'sucursal_id' => 'SUC001',
       'fecha_pedido' => now()->subDay(),
       'fecha_entrega' => null,
       'estado' => 'en_proceso',
@@ -160,15 +162,15 @@ class DatabaseSeeder extends Seeder
 
     // Create Detalle Lineas Pedidos
     DB::table('detalle_lineas_pedidos')->insert([
-      ['pedido_id' => $pedido1, 'linea_id' => 1, 'cadena_id' => $cadena1, 'sucursal_id' => 1, 'cantidad_asignada' => 2, 'cantidad_recolectada' => 2],
-      ['pedido_id' => $pedido1, 'linea_id' => 2, 'cadena_id' => $cadena1, 'sucursal_id' => 1, 'cantidad_asignada' => 3, 'cantidad_recolectada' => 3],
-      ['pedido_id' => $pedido2, 'linea_id' => 1, 'cadena_id' => $cadena2, 'sucursal_id' => 1, 'cantidad_asignada' => 1, 'cantidad_recolectada' => 0],
+      ['pedido_id' => $pedido1, 'linea_id' => 1, 'cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 2, 'cantidad_recolectada' => 2],
+      ['pedido_id' => $pedido1, 'linea_id' => 2, 'cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 3, 'cantidad_recolectada' => 3],
+      ['pedido_id' => $pedido2, 'linea_id' => 1, 'cadena_id' => $cadena2, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 1, 'cantidad_recolectada' => 0],
     ]);
 
     // Create Ruta Recoleccion
     DB::table('ruta_recoleccion')->insert([
-      ['pedido_id' => $pedido1, 'cadena_id' => $cadena1, 'sucursal_id' => 1, 'orden_visita' => 1, 'estado_recoleccion' => 'completado', 'fecha_hora_visita' => now()->subDays(2)],
-      ['pedido_id' => $pedido2, 'cadena_id' => $cadena2, 'sucursal_id' => 1, 'orden_visita' => 1, 'estado_recoleccion' => 'pendiente', 'fecha_hora_visita' => null],
+      ['pedido_id' => $pedido1, 'cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'orden_visita' => 1, 'estado_recoleccion' => 'completado', 'fecha_hora_visita' => now()->subDays(2)],
+      ['pedido_id' => $pedido2, 'cadena_id' => $cadena2, 'sucursal_id' => 'SUC001', 'orden_visita' => 1, 'estado_recoleccion' => 'pendiente', 'fecha_hora_visita' => null],
     ]);
 
     // Create Notificaciones

@@ -9,6 +9,8 @@ class CadenaFarmaceutica extends Model
 {
   protected $table = 'cadena_farmaceuticas';
   protected $primaryKey = 'cadena_id';
+  public $incrementing = false;
+  protected $keyType = 'string';
   public $timestamps = false;
 
   protected $fillable = [

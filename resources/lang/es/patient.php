@@ -61,11 +61,16 @@ return [
       'awaiting_confirmation' => 'Esperando Confirmación de la Farmacia',
       'ready_for_pickup' => 'Listo para Recoger',
       'in_transit' => 'En Tránsito',
+      'in_process' => 'En Proceso',
+      'delivered' => 'Entregado',
+      'no_orders' => 'No tienes pedidos activos en este momento',
     ],
     'recent_history' => [
       'title' => 'Historial Reciente',
       'view_all' => 'Ver Todos los Pedidos',
       'completed' => 'Completado',
+      'cancelled' => 'Cancelado',
+      'no_history' => 'No tienes historial de pedidos',
       'status' => [
         'delivered' => 'Entregado',
         'cancelled' => 'Cancelado',

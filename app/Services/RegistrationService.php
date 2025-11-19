@@ -44,7 +44,7 @@ class RegistrationService
       );
 
       $user->setSessionToken($sessionToken);
-      $user->setLastLoginAt(now());
+      $user->setUltimoLogin(now());
 
       $request->session()->put('user_id', $user->getId());
       $request->session()->put('session_token', $sessionToken);

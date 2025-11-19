@@ -10,8 +10,8 @@ return new class extends Migration
   {
     Schema::create('ruta_recoleccion', function (Blueprint $table) {
       $table->unsignedBigInteger('pedido_id');
-      $table->unsignedBigInteger('cadena_id');
-      $table->unsignedBigInteger('sucursal_id');
+      $table->string('cadena_id', 50);
+      $table->string('sucursal_id', 50);
       $table->integer('orden_visita');
       $table->string('estado_recoleccion', 50);
       $table->dateTime('fecha_hora_visita')->nullable();

@@ -22,12 +22,16 @@ return new class extends Migration
       $table->timestamp('session_expires_at')->nullable();
       $table->timestamp('ultimo_login')->nullable();
       $table->timestamp('ultimo_cierre_sesion')->nullable();
+      // Campos para rate limiting (login throttle)
+      $table->tinyInteger('login_attempts')->default(0);
+      $table->timestamp('login_attempts_reset_at')->nullable();
+      $table->timestamp('locked_until')->nullable();
       $table->rememberToken();
       $table->timestamps();
     });
 
     Schema::create('password_reset_tokens', function (Blueprint $table) {
-      $table->string('email')->primary();
+      $table->string('correo')->primary();
       $table->string('token');
       $table->timestamp('created_at')->nullable();
     });
@@ -42,7 +46,7 @@ return new class extends Migration
     });
 
     Schema::create('session_reset_tokens', function (Blueprint $table) {
-      $table->string('email')->primary();
+      $table->string('correo')->primary();
       $table->string('token');
       $table->timestamp('created_at')->nullable();
     });

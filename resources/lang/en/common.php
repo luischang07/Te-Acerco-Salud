@@ -30,6 +30,9 @@ return [
     'copyright' => '© :year Te Acerco Salud. All rights reserved.',
   ],
 
+  // Common UI elements
+  'loading' => 'Loading...',
+
   // Common buttons and actions
   'actions' => [
     'save' => 'Save',
@@ -46,6 +49,12 @@ return [
     'back' => 'Back',
     'next' => 'Next',
     'previous' => 'Previous',
+    'apply' => 'Apply',
+    'apply_filters' => 'Apply Filters',
+    'clear' => 'Clear',
+    'review' => 'Review',
+    'view_all' => 'View All',
+    'title' => 'Actions',
   ],
 
   // Status messages
@@ -54,5 +63,26 @@ return [
     'error' => 'Error!',
     'warning' => 'Warning!',
     'info' => 'Information',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    'suspended' => 'Suspended',
+    'pending' => 'Pending',
+  ],
+
+  // Filters
+  'filters' => [
+    'search' => 'Search',
+    'all' => 'All',
+    'per_page' => 'Per page',
+  ],
+
+  // Pagination
+  'pagination' => [
+    'showing' => 'Showing',
+    'to' => 'to',
+    'of' => 'of',
+    'results' => 'results',
+    'previous' => 'Previous',
+    'next' => 'Next',
   ],
 ];

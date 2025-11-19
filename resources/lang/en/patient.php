@@ -61,11 +61,16 @@ return [
       'awaiting_confirmation' => 'Awaiting Pharmacy Confirmation',
       'ready_for_pickup' => 'Ready for Pickup',
       'in_transit' => 'In Transit',
+      'in_process' => 'In Process',
+      'delivered' => 'Delivered',
+      'no_orders' => 'You have no active orders at this time',
     ],
     'recent_history' => [
       'title' => 'Recent History',
       'view_all' => 'View All Orders',
       'completed' => 'Completed',
+      'cancelled' => 'Cancelled',
+      'no_history' => 'You have no order history',
       'status' => [
         'delivered' => 'Delivered',
         'cancelled' => 'Cancelled',

@@ -10,25 +10,25 @@ class UserRepository
 {
   public function findByEmailWithLock(string $email): ?User
   {
-    return User::where('email', $email)->lockForUpdate()->first();
+    return User::where('correo', $email)->lockForUpdate()->first();
   }
 
   public function findByEmail(string $email): ?UserEntity
   {
-    $userModel = User::where('email', $email)->first();
+    $userModel = User::where('correo', $email)->first();
     return $userModel ? new UserEntity($userModel) : null;
   }
 
   public function findById(int $id): ?UserEntity
   {
-    $userModel = User::find($id);
+    $userModel = User::where('user_id', $id)->first();
     return $userModel ? new UserEntity($userModel) : null;
   }
 
   public function findByIdWithLock(int $id): ?UserEntity
   {
     $userModel = DB::transaction(function () use ($id) {
-      return User::where('id', $id)->lockForUpdate()->first();
+      return User::where('user_id', $id)->lockForUpdate()->first();
     });
 
     return $userModel ? new UserEntity($userModel) : null;
@@ -40,25 +40,25 @@ class UserRepository
     return new UserEntity($userModel);
   }
 
-  public function updateSessionData(int $userId, ?string $sessionToken, ?\DateTime $lastLoginAt, ?\DateTime $sessionExpiresAt = null): bool
+  public function updateSessionData(int $userId, ?string $sessionToken, $lastLoginAt, $sessionExpiresAt = null): bool
   {
-    return User::where('id', $userId)
+    return User::where('user_id', $userId)
       ->update([
         'session_token' => $sessionToken,
         'session_expires_at' => $sessionExpiresAt,
-        'last_login_at' => $lastLoginAt,
+        'ultimo_login' => $lastLoginAt,
       ]) > 0;
   }
 
-  public function updateSessionDataWithLock(int $userId, ?string $sessionToken, ?\DateTime $lastLoginAt, ?\DateTime $sessionExpiresAt = null): bool
+  public function updateSessionDataWithLock(int $userId, ?string $sessionToken, $lastLoginAt, $sessionExpiresAt = null): bool
   {
     return DB::transaction(function () use ($userId, $sessionToken, $lastLoginAt, $sessionExpiresAt) {
-      return User::where('id', $userId)
+      return User::where('user_id', $userId)
         ->lockForUpdate()
         ->update([
           'session_token' => $sessionToken,
           'session_expires_at' => $sessionExpiresAt,
-          'last_login_at' => $lastLoginAt,
+          'ultimo_login' => $lastLoginAt,
         ]) > 0;
     });
   }
@@ -66,7 +66,7 @@ class UserRepository
   public function clearSession(int $userId): bool
   {
     return DB::transaction(function () use ($userId) {
-      return User::where('id', $userId)
+      return User::where('user_id', $userId)
         ->lockForUpdate()
         ->update([
           'session_token' => null,
@@ -78,7 +78,7 @@ class UserRepository
   public function incrementLoginAttempts(int $userId): bool
   {
     return DB::transaction(function () use ($userId) {
-      $user = User::where('id', $userId)->lockForUpdate()->first();
+      $user = User::where('user_id', $userId)->lockForUpdate()->first();
       if (!$user) {
         return false;
       }
@@ -97,7 +97,7 @@ class UserRepository
 
   public function resetLoginAttempts(int $userId): bool
   {
-    return User::where('id', $userId)
+    return User::where('user_id', $userId)
       ->update([
         'login_attempts' => 0,
         'login_attempts_reset_at' => null,
@@ -107,7 +107,7 @@ class UserRepository
 
   public function updateLoginAttempts(int $userId, int $attempts, ?\DateTime $resetAt = null, ?\DateTime $lockedUntil = null): bool
   {
-    return User::where('id', $userId)
+    return User::where('user_id', $userId)
       ->update([
         'login_attempts' => $attempts,
         'login_attempts_reset_at' => $resetAt,

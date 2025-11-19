@@ -25,7 +25,7 @@ class SimulateEmailClick extends Command
     $this->info("🔗 Simulando clic en enlace para: {$email}");
 
     $tokenRecord = DB::table('session_reset_tokens')
-      ->where('email', $email)
+      ->where('correo', $email)
       ->where('created_at', '>', now()->subHours(1))
       ->latest('created_at')
       ->first();
@@ -42,7 +42,7 @@ class SimulateEmailClick extends Command
 
     // Actualizar el registro con un token conocido para la prueba
     DB::table('session_reset_tokens')
-      ->where('email', $email)
+      ->where('correo', $email)
       ->update(['token' => $hashedToken]);
 
     $this->info("🔑 Token de prueba generado");

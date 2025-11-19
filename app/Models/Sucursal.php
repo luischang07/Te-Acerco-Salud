@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class Sucursal extends Model
 {
+  use HasRelationships;
+
   protected $table = 'sucursales';
   protected $primaryKey = ['cadena_id', 'sucursal_id'];
   public $incrementing = false;
@@ -17,7 +20,10 @@ class Sucursal extends Model
     'cadena_id',
     'sucursal_id',
     'nombre',
-    'direccion',
+    'calle',
+    'numero_ext',
+    'numero_int',
+    'colonia',
     'latitud',
     'longitud',
   ];
@@ -26,6 +32,19 @@ class Sucursal extends Model
     'latitud' => 'decimal:8',
     'longitud' => 'decimal:8',
   ];
+
+  /**
+   * Get full address
+   */
+  public function getDireccionAttribute(): string
+  {
+    $address = $this->calle . ' ' . $this->numero_ext;
+    if ($this->numero_int) {
+      $address .= ' Int. ' . $this->numero_int;
+    }
+    $address .= ', ' . $this->colonia;
+    return $address;
+  }
 
   public function cadena(): BelongsTo
   {

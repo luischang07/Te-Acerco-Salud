@@ -30,6 +30,9 @@ return [
     'copyright' => '© :year Te Acerco Salud. Todos los derechos reservados.',
   ],
 
+  // Common UI elements
+  'loading' => 'Cargando...',
+
   // Common buttons and actions
   'actions' => [
     'save' => 'Guardar',
@@ -46,6 +49,12 @@ return [
     'back' => 'Atrás',
     'next' => 'Siguiente',
     'previous' => 'Anterior',
+    'apply' => 'Aplicar',
+    'apply_filters' => 'Aplicar Filtros',
+    'clear' => 'Limpiar',
+    'review' => 'Revisar',
+    'view_all' => 'Ver Todo',
+    'title' => 'Acciones',
   ],
 
   // Status messages
@@ -54,5 +63,26 @@ return [
     'error' => '¡Error!',
     'warning' => '¡Advertencia!',
     'info' => 'Información',
+    'active' => 'Activo',
+    'inactive' => 'Inactivo',
+    'suspended' => 'Suspendido',
+    'pending' => 'Pendiente',
+  ],
+
+  // Filters
+  'filters' => [
+    'search' => 'Buscar',
+    'all' => 'Todos',
+    'per_page' => 'Por página',
+  ],
+
+  // Pagination
+  'pagination' => [
+    'showing' => 'Mostrando',
+    'to' => 'a',
+    'of' => 'de',
+    'results' => 'resultados',
+    'previous' => 'Anterior',
+    'next' => 'Siguiente',
   ],
 ];

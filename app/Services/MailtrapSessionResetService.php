@@ -33,7 +33,7 @@ class MailtrapSessionResetService
 
     // Guardar el token en la base de datos
     DB::table('session_reset_tokens')->updateOrInsert(
-      ['email' => $email],
+      ['correo' => $email],
       [
         'token' => hash('sha256', $token),
         'created_at' => now(),
@@ -106,7 +106,7 @@ class MailtrapSessionResetService
 
   private function getTextTemplate(UserEntity $user, string $resetUrl): string
   {
-    return "Hola {$user->getName()},\n\n" .
+    return "Hola {$user->getNombre()},\n\n" .
       "Hemos detectado que intentaste iniciar sesión desde un nuevo dispositivo, " .
       "pero ya tienes una sesión activa en otro dispositivo.\n\n" .
       "Si deseas cerrar tu sesión actual para poder iniciar sesión desde el nuevo dispositivo, " .
@@ -133,7 +133,7 @@ class MailtrapSessionResetService
       ];
     }
 
-    $user = $this->userRepository->findByEmail($resetToken->email);
+    $user = $this->userRepository->findByEmail($resetToken->correo);
 
     if (!$user) {
       return [
@@ -145,15 +145,15 @@ class MailtrapSessionResetService
     $this->singleSessionManager->clearSession($user);
 
     DB::table('session_reset_tokens')
-      ->where('email', $resetToken->email)
+      ->where('correo', $resetToken->correo)
       ->delete();
 
-    $this->sendConfirmationEmail($resetToken->email, $user);
+    $this->sendConfirmationEmail($resetToken->correo, $user);
 
     return [
       'success' => true,
       'message' => 'Sesión eliminada exitosamente. Ahora puedes iniciar sesión desde tu nuevo dispositivo.',
-      'email' => $resetToken->email
+      'email' => $resetToken->correo
     ];
   }
 
@@ -186,7 +186,7 @@ class MailtrapSessionResetService
     return "
         <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
             <h2 style='color: #28a745;'>✅ Sesión Eliminada</h2>
-            <p>Hola <strong>{$user->getName()}</strong>,</p>
+            <p>Hola <strong>{$user->getNombre()}</strong>,</p>
             <p>Tu sesión activa ha sido eliminada exitosamente.</p>
             <p>Ahora puedes iniciar sesión desde tu nuevo dispositivo.</p>
             <p style='color: #666; font-size: 12px;'>

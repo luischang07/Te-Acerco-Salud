@@ -32,4 +32,13 @@ class Inventario extends Model
   {
     return $this->belongsTo(Medicamento::class, 'medicamento_id', 'id');
   }
+
+  /**
+   * Scope para filtrar inventario por sucursal
+   */
+  public function scopeForBranch($query, string $cadenaId, string $sucursalId)
+  {
+    return $query->where('cadena_id', $cadenaId)
+      ->where('sucursal_id', $sucursalId);
+  }
 }

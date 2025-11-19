@@ -29,7 +29,7 @@
                     <?php elseif($errors->has('session_reset')): ?>
                         <?php echo e($errors->first('session_reset')); ?>
 
-                    <?php elseif($errors->has('nip') && session('lockout_seconds')): ?>
+                    <?php elseif($errors->has('password') && session('lockout_seconds')): ?>
                         <span id="lockout-message">
                             <?php echo e(__('messages.login.lockout', ['time' => ''])); ?> <span id="countdown-timer"></span>.
                         </span>
@@ -68,8 +68,8 @@
                         autocomplete="email" autofocus>
                 </div>
                 <div>
-                    <label for="nip"><?php echo e(__('auth.login.password')); ?></label>
-                    <input id="nip" type="password" name="nip" required autocomplete="current-password">
+                    <label for="password"><?php echo e(__('auth.login.password')); ?></label>
+                    <input id="password" type="password" name="password" required autocomplete="current-password">
                 </div>
                 <div class="remember-me">
                     <input type="checkbox" name="remember" id="remember" <?php echo e(old('remember') ? 'checked' : ''); ?>>

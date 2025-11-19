@@ -13,7 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
   ->withMiddleware(function (Middleware $middleware): void {
     $middleware->alias([
       'single.session' => \App\Http\Middleware\EnsureSingleSession::class,
+      'role' => \App\Http\Middleware\CheckRole::class,
     ]);
+
+    // Agregar middleware de logging de seguridad globalmente
+    $middleware->append(\App\Http\Middleware\LogSecurityEvents::class);
   })
   ->withExceptions(function (): void {
     //

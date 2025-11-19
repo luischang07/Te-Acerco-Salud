@@ -29,6 +29,9 @@ class User extends Authenticatable
     'session_expires_at',
     'ultimo_login',
     'ultimo_cierre_sesion',
+    'login_attempts',
+    'login_attempts_reset_at',
+    'locked_until',
   ];
 
   /**
@@ -55,6 +58,8 @@ class User extends Authenticatable
       'ultimo_login' => 'datetime',
       'ultimo_cierre_sesion' => 'datetime',
       'session_expires_at' => 'datetime',
+      'login_attempts_reset_at' => 'datetime',
+      'locked_until' => 'datetime',
     ];
   }
 
@@ -76,5 +81,66 @@ class User extends Authenticatable
   public function notificaciones()
   {
     return $this->hasMany(Notificacion::class, 'user_id', 'user_id');
+  }
+
+  /**
+   * Verificar si el usuario es administrador
+   */
+  public function isAdmin(): bool
+  {
+    return $this->administrador()->exists();
+  }
+
+  /**
+   * Verificar si el usuario es empleado de farmacia
+   */
+  public function isPharmacyEmployee(): bool
+  {
+    return $this->empleado()->exists();
+  }
+
+  /**
+   * Verificar si el usuario es paciente
+   */
+  public function isPatient(): bool
+  {
+    return $this->paciente()->exists();
+  }
+
+  /**
+   * Obtener el rol del usuario
+   */
+  public function getRole(): ?string
+  {
+    if ($this->isAdmin()) {
+      return 'admin';
+    }
+    if ($this->isPharmacyEmployee()) {
+      return 'pharmacy';
+    }
+    if ($this->isPatient()) {
+      return 'patient';
+    }
+    return null;
+  }
+
+  /**
+   * Obtener IDs de sucursal del empleado
+   */
+  public function getBranchIds(): ?array
+  {
+    if (!$this->isPharmacyEmployee()) {
+      return null;
+    }
+
+    $empleado = $this->empleado;
+    if (!$empleado) {
+      return null;
+    }
+
+    return [
+      'cadena_id' => $empleado->cadena_id,
+      'sucursal_id' => $empleado->sucursal_id,
+    ];
   }
 }

@@ -20,7 +20,7 @@ class EnsureSingleSession
     $authUser = Auth::user();
 
     if ($authUser) {
-      $user = $this->userRepository->findById($authUser->id);
+      $user = $this->userRepository->findById($authUser->user_id);
 
       if ($user) {
         if ($user->isSessionExpired()) {

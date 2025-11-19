@@ -27,7 +27,7 @@
                         {{ $errors->first('session') }}
                     @elseif($errors->has('session_reset'))
                         {{ $errors->first('session_reset') }}
-                    @elseif($errors->has('nip') && session('lockout_seconds'))
+                    @elseif($errors->has('password') && session('lockout_seconds'))
                         <span id="lockout-message">
                             {{ __('messages.login.lockout', ['time' => '']) }} <span id="countdown-timer"></span>.
                         </span>
@@ -65,8 +65,8 @@
                         autocomplete="email" autofocus>
                 </div>
                 <div>
-                    <label for="nip">{{ __('auth.login.password') }}</label>
-                    <input id="nip" type="password" name="nip" required autocomplete="current-password">
+                    <label for="password">{{ __('auth.login.password') }}</label>
+                    <input id="password" type="password" name="password" required autocomplete="current-password">
                 </div>
                 <div class="remember-me">
                     <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>

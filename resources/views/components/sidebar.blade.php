@@ -54,6 +54,11 @@
         'admin' => [
             ['icon' => 'dashboard', 'label' => __('admin.dashboard.sidebar.dashboard'), 'route' => 'admin.dashboard'],
             ['icon' => 'group', 'label' => __('admin.dashboard.sidebar.users'), 'route' => 'admin.users'],
+            [
+                'icon' => 'local_pharmacy',
+                'label' => __('admin.dashboard.sidebar.pharmacy_chains'),
+                'route' => 'admin.chains',
+            ],
             ['icon' => 'store', 'label' => __('admin.dashboard.sidebar.pharmacies'), 'route' => 'admin.pharmacies'],
             ['icon' => 'receipt_long', 'label' => __('admin.dashboard.sidebar.orders'), 'route' => 'admin.orders'],
             ['icon' => 'warning', 'label' => __('admin.dashboard.sidebar.penalties'), 'route' => 'admin.penalties'],

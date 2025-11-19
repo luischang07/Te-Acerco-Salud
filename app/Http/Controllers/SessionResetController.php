@@ -17,7 +17,7 @@ class SessionResetController extends Controller
   {
 
     $request->validate([
-      'email' => 'required|email|exists:users,email'
+      'email' => 'required|email|exists:users,correo'
     ]);
 
     $sent = $this->sessionResetService->sendSessionResetEmail($request->email);

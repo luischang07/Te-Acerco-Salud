@@ -11,8 +11,8 @@ return new class extends Migration
     Schema::create('pedidos', function (Blueprint $table) {
       $table->id('pedido_id');
       $table->unsignedBigInteger('paciente_id');
-      $table->unsignedBigInteger('cadena_id');
-      $table->unsignedBigInteger('sucursal_id');
+      $table->string('cadena_id', 50);
+      $table->string('sucursal_id', 50);
       $table->date('fecha_pedido');
       $table->date('fecha_entrega')->nullable();
       $table->string('estado', 50);

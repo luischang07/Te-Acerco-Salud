@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class AuthenticationService
@@ -51,6 +52,15 @@ class AuthenticationService
   {
     $this->loginThrottleService->recordSuccessfulLogin($user);
 
+    // ✅ Log login exitoso
+    Log::channel('security')->info('Successful login', [
+      'user_id' => $user->getId(),
+      'correo' => $user->getCorreo(),
+      'ip' => $request->ip(),
+      'user_agent' => $request->userAgent(),
+      'timestamp' => now()->toDateTimeString(),
+    ]);
+
     $sessionToken = Str::uuid()->toString();
 
     $remember = $request->has('remember');
@@ -75,11 +85,28 @@ class AuthenticationService
     // Guardar el session_token DESPUÉS de regenerar la sesión
     $request->session()->put('session_token', $sessionToken);
 
-    return redirect()->route('landing')->with('status', __('Bienvenido de nuevo.'));
+    // ✅ RBAC: Redirigir según el rol del usuario
+    $role = $userModel->getRole();
+
+    return match ($role) {
+      'admin' => redirect()->route('admin.dashboard')->with('status', __('Bienvenido de nuevo, Administrador.')),
+      'pharmacy' => redirect()->route('pharmacy.dashboard')->with('status', __('Bienvenido de nuevo.')),
+      'patient' => redirect()->route('patient.dashboard')->with('status', __('Bienvenido de nuevo.')),
+      default => redirect()->route('landing')->with('status', __('Bienvenido de nuevo.')),
+    };
   }
 
   private function handleFailedLogin(LoginRequest $request, ?UserEntity $user = null): RedirectResponse
   {
+    // ✅ Log login fallido
+    Log::channel('security')->warning('Failed login attempt', [
+      'email' => $request->correo,
+      'ip' => $request->ip(),
+      'user_agent' => $request->userAgent(),
+      'user_exists' => $user !== null,
+      'timestamp' => now()->toDateTimeString(),
+    ]);
+
     if ($user) {
       $result = $this->loginThrottleService->recordFailedAttemptInTransaction($user);
 
@@ -111,8 +138,18 @@ class AuthenticationService
   {
     $authUser = Auth::user();
 
+    // ✅ Log logout
     if ($authUser) {
-      $user = $this->userRepository->findById($authUser->id);
+      Log::channel('security')->info('User logout', [
+        'user_id' => $authUser->user_id,
+        'email' => $authUser->correo,
+        'ip' => request()->ip(),
+        'timestamp' => now()->toDateTimeString(),
+      ]);
+    }
+
+    if ($authUser) {
+      $user = $this->userRepository->findById($authUser->user_id);
       if ($user) {
         $this->singleSessionManager->clearSession($user);
       }
@@ -128,6 +165,14 @@ class AuthenticationService
 
   private function handleAccountLockout(LoginRequest $request, UserEntity $user): RedirectResponse
   {
+    // ✅ Log cuenta bloqueada
+    Log::channel('security')->warning('Account locked due to failed attempts', [
+      'user_id' => $user->getId(),
+      'email' => $request->correo,
+      'ip' => $request->ip(),
+      'attempts' => $user->getLoginAttempts(),
+      'timestamp' => now()->toDateTimeString(),
+    ]);
 
     $formattedTime = $this->loginThrottleService->getFormattedTimeUntilUnlock($user);
     $remainingSeconds = $this->loginThrottleService->getRemainingSecondsForJs($user);

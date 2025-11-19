@@ -8,12 +8,13 @@ use Carbon\Carbon;
 class UserEntity
 {
   private int $id;
-  private string $name;
-  private string $email;
-  private string $nip;
+  private string $nombre;
+  private string $correo;
+  private string $direccion;
   private ?string $sessionToken;
   private ?Carbon $sessionExpiresAt;
-  private ?Carbon $lastLoginAt;
+  private ?Carbon $ultimoLogin;
+  private ?Carbon $ultimoCierreSesion;
   private ?Carbon $emailVerifiedAt;
   private int $loginAttempts;
   private ?Carbon $loginAttemptsResetAt;
@@ -23,13 +24,14 @@ class UserEntity
 
   public function __construct(UserModel $user)
   {
-    $this->id = $user->id;
-    $this->name = $user->name;
-    $this->email = $user->email;
-    $this->nip = $user->nip;
+    $this->id = $user->user_id;
+    $this->nombre = $user->nombre;
+    $this->correo = $user->correo;
+    $this->direccion = $user->direccion;
     $this->sessionToken = $user->session_token;
     $this->sessionExpiresAt = $user->session_expires_at;
-    $this->lastLoginAt = $user->last_login_at;
+    $this->ultimoLogin = $user->ultimo_login;
+    $this->ultimoCierreSesion = $user->ultimo_cierre_sesion;
     $this->emailVerifiedAt = $user->email_verified_at;
     $this->loginAttempts = $user->login_attempts ?? 0;
     $this->loginAttemptsResetAt = $user->login_attempts_reset_at;
@@ -43,19 +45,19 @@ class UserEntity
     return $this->id;
   }
 
-  public function getName(): string
+  public function getNombre(): string
   {
-    return $this->name;
+    return $this->nombre;
   }
 
-  public function getEmail(): string
+  public function getCorreo(): string
   {
-    return $this->email;
+    return $this->correo;
   }
 
-  public function getNip(): string
+  public function getDireccion(): string
   {
-    return $this->nip;
+    return $this->direccion;
   }
 
   public function getSessionToken(): ?string
@@ -68,9 +70,14 @@ class UserEntity
     return $this->sessionExpiresAt;
   }
 
-  public function getLastLoginAt(): ?Carbon
+  public function getUltimoLogin(): ?Carbon
   {
-    return $this->lastLoginAt;
+    return $this->ultimoLogin;
+  }
+
+  public function getUltimoCierreSesion(): ?Carbon
+  {
+    return $this->ultimoCierreSesion;
   }
 
   public function getEmailVerifiedAt(): ?Carbon
@@ -113,9 +120,14 @@ class UserEntity
     $this->sessionExpiresAt = $expiresAt;
   }
 
-  public function setLastLoginAt(?Carbon $lastLoginAt): void
+  public function setUltimoLogin(?Carbon $ultimoLogin): void
   {
-    $this->lastLoginAt = $lastLoginAt;
+    $this->ultimoLogin = $ultimoLogin;
+  }
+
+  public function setUltimoCierreSesion(?Carbon $ultimoCierreSesion): void
+  {
+    $this->ultimoCierreSesion = $ultimoCierreSesion;
   }
 
   public function setLoginAttempts(int $attempts): void
@@ -168,13 +180,14 @@ class UserEntity
   public function toArray(): array
   {
     return [
-      'id' => $this->id,
-      'name' => $this->name,
-      'email' => $this->email,
-      'nip' => $this->nip,
+      'user_id' => $this->id,
+      'nombre' => $this->nombre,
+      'correo' => $this->correo,
+      'direccion' => $this->direccion,
       'session_token' => $this->sessionToken,
       'session_expires_at' => $this->sessionExpiresAt,
-      'last_login_at' => $this->lastLoginAt,
+      'ultimo_login' => $this->ultimoLogin,
+      'ultimo_cierre_sesion' => $this->ultimoCierreSesion,
       'email_verified_at' => $this->emailVerifiedAt,
       'login_attempts' => $this->loginAttempts,
       'login_attempts_reset_at' => $this->loginAttemptsResetAt,

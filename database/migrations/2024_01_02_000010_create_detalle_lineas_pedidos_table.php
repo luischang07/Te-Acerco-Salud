@@ -11,8 +11,8 @@ return new class extends Migration
     Schema::create('detalle_lineas_pedidos', function (Blueprint $table) {
       $table->unsignedBigInteger('pedido_id');
       $table->unsignedBigInteger('linea_id');
-      $table->unsignedBigInteger('cadena_id');
-      $table->unsignedBigInteger('sucursal_id');
+      $table->string('cadena_id', 50);
+      $table->string('sucursal_id', 50);
       $table->integer('cantidad_asignada');
       $table->integer('cantidad_recolectada')->default(0);
 

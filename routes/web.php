@@ -60,6 +60,7 @@ Route::middleware(['auth', 'single.session'])->group(function (): void {
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
     Route::get('/penalties', [AdminController::class, 'penalties'])->name('penalties');
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
+    Route::get('/chains', [AdminController::class, 'chains'])->name('chains');
   });
 
   // Settings route (common for all user types)

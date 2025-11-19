@@ -20,17 +20,17 @@ class SendTestEmail extends Command
 
   public function handle()
   {
-    $email = $this->argument('email');
+    $correo = $this->argument('correo');
 
-    $this->info("🚀 Enviando email de prueba a: {$email}");
+    $this->info("🚀 Enviando email de prueba a: {$correo}");
     $this->info("📧 Usando configuración de Mailtrap Live");
 
     // Crear o actualizar usuario de prueba
     $user = User::updateOrCreate(
-      ['email' => $email],
+      ['correo' => $correo],
       [
         'name' => 'Usuario Test - ' . now()->format('H:i:s'),
-        'nip' => bcrypt('123456'),
+        'password' => bcrypt('Admin123!'),
         'session_token' => 'test-session-' . now()->timestamp,
         'session_expires_at' => now()->addHour()
       ]
@@ -43,14 +43,14 @@ class SendTestEmail extends Command
     try {
       $this->info("📤 Enviando email...");
 
-      $result = $this->sessionResetService->sendSessionResetEmail($email);
+      $result = $this->sessionResetService->sendSessionResetEmail($correo);
 
       if ($result) {
         $this->info("✅ Email enviado exitosamente!");
 
         // Obtener el token generado
         $resetToken = DB::table('session_reset_tokens')
-          ->where('email', $email)
+          ->where('correo', $correo)
           ->latest('created_at')
           ->first();
 
@@ -58,7 +58,7 @@ class SendTestEmail extends Command
           $this->table(
             ['Campo', 'Valor'],
             [
-              ['Email', $resetToken->email],
+              ['correo', $resetToken->correo],
               ['Token (primeros 16)', substr($resetToken->token, 0, 16) . '...'],
               ['Creado', $resetToken->created_at],
               ['Válido hasta', now()->parse($resetToken->created_at)->addHour()->format('Y-m-d H:i:s')],
@@ -69,7 +69,7 @@ class SendTestEmail extends Command
           $this->line("🔗 URL de reset: {$resetUrl}");
         }
 
-        $this->info("📧 Revisa tu bandeja de entrada en: {$email}");
+        $this->info("📧 Revisa tu bandeja de entrada en: {$correo}");
         $this->info("📝 También puedes revisar logs: storage/logs/laravel.log");
       } else {
         $this->error("❌ No se pudo enviar el email");

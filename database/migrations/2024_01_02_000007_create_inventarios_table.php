@@ -9,8 +9,8 @@ return new class extends Migration
   public function up(): void
   {
     Schema::create('inventarios', function (Blueprint $table) {
-      $table->unsignedBigInteger('cadena_id');
-      $table->unsignedBigInteger('sucursal_id');
+      $table->string('cadena_id', 50);
+      $table->string('sucursal_id', 50);
       $table->unsignedBigInteger('medicamento_id');
       $table->integer('cantidad');
 
