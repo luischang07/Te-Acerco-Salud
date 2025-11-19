@@ -15,6 +15,7 @@ return new class extends Migration
       $table->string('calle', 100);
       $table->string('numero_ext', 10);
       $table->string('numero_int', 10)->nullable();
+      $table->string('ciudad', 10)->nullable();
       $table->string('colonia', 100);
       $table->decimal('latitud', 10, 8);
       $table->decimal('longitud', 11, 8);

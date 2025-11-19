@@ -11,7 +11,6 @@ return new class extends Migration
     Schema::create('notificaciones', function (Blueprint $table) {
       $table->id('notificacion_id');
       $table->unsignedBigInteger('user_id');
-      $table->string('tipo', 50);
       $table->string('mensaje', 255);
       $table->dateTime('fecha_hora');
       $table->boolean('leida')->default(false);

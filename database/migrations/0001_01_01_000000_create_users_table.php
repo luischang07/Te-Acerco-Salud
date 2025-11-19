@@ -12,17 +12,16 @@ return new class extends Migration
   public function up(): void
   {
     Schema::create('users', function (Blueprint $table) {
-      $table->id('user_id'); // Cambiar a user_id como PK
-      $table->string('nombre', 100); // Nuevo
-      $table->string('correo', 100)->unique(); // Cambiar de email a correo
-      $table->string('direccion', 255); // Nuevo
-      $table->string('password', 255); // Mantener password
+      $table->id('user_id'); 
+      $table->string('nombre', 100);
+      $table->string('correo', 100)->unique(); 
+      $table->string('password', 255); 
+      $table->string('direccion', 255); 
       $table->timestamp('email_verified_at')->nullable();
       $table->string('session_token', 255)->nullable();
       $table->timestamp('session_expires_at')->nullable();
       $table->timestamp('ultimo_login')->nullable();
       $table->timestamp('ultimo_cierre_sesion')->nullable();
-      // Campos para rate limiting (login throttle)
       $table->tinyInteger('login_attempts')->default(0);
       $table->timestamp('login_attempts_reset_at')->nullable();
       $table->timestamp('locked_until')->nullable();
