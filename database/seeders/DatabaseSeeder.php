@@ -33,7 +33,6 @@ class DatabaseSeeder extends Seeder
 
     $pacienteUser1 = User::factory()->create([
       'nombre' => 'Juan',
-      'apellido' => 'Pérez',
       'correo' => 'juan@example.com',
       'direccion' => '456 Patient Ave',
       'password' => Hash::make('Patient123!'),
@@ -41,7 +40,6 @@ class DatabaseSeeder extends Seeder
 
     $pacienteUser2 = User::factory()->create([
       'nombre' => 'María',
-      'apellido' => 'García',
       'correo' => 'maria@example.com',
       'direccion' => '789 Health Blvd',
       'password' => Hash::make('Maria123!'),
@@ -49,7 +47,6 @@ class DatabaseSeeder extends Seeder
 
     $empleadoUser1 = User::factory()->create([
       'nombre' => 'Pedro',
-      'apellido' => 'Farmacéutico',
       'correo' => 'pedro@example.com',
       'direccion' => '321 Employee Rd',
       'password' => Hash::make('Pharmacy123!'),
@@ -73,30 +70,32 @@ class DatabaseSeeder extends Seeder
     DB::table('cadena_farmaceuticas')->insert([
       'cadena_id' => $cadena1,
       'razon_social' => 'Farmacias del Ahorro SA',
-      'name' => 'Del Ahorro',
+      'nombre' => 'Del Ahorro',
     ]);
 
     $cadena2 = 'CAD002';
     DB::table('cadena_farmaceuticas')->insert([
       'cadena_id' => $cadena2,
       'razon_social' => 'Farmacias Guadalajara SA',
-      'name' => 'Guadalajara',
+      'nombre' => 'Guadalajara',
     ]);
 
     $cadena3 = 'CAD003';
     DB::table('cadena_farmaceuticas')->insert([
       'cadena_id' => $cadena3,
       'razon_social' => 'Farmacias Similares SA',
-      'name' => 'Similares',
+      'nombre' => 'Similares',
     ]);
+    
 
     // Create Sucursales
     DB::table('sucursales')->insert([
-      ['cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'nombre' => 'Del Ahorro Centro', 'calle' => 'Av. Principal', 'numero_ext' => '123', 'numero_int' => null, 'colonia' => 'Centro', 'latitud' => 19.4326, 'longitud' => -99.1332],
-      ['cadena_id' => $cadena1, 'sucursal_id' => 'SUC002', 'nombre' => 'Del Ahorro Norte', 'calle' => 'Calle Norte', 'numero_ext' => '456', 'numero_int' => null, 'colonia' => 'Norte', 'latitud' => 19.4500, 'longitud' => -99.1500],
-      ['cadena_id' => $cadena2, 'sucursal_id' => 'SUC001', 'nombre' => 'Guadalajara Sur', 'calle' => 'Blvd. Sur', 'numero_ext' => '789', 'numero_int' => null, 'colonia' => 'Sur', 'latitud' => 19.4000, 'longitud' => -99.1200],
-      ['cadena_id' => $cadena2, 'sucursal_id' => 'SUC002', 'nombre' => 'Guadalajara Este', 'calle' => 'Av. Este', 'numero_ext' => '321', 'numero_int' => null, 'colonia' => 'Este', 'latitud' => 19.4200, 'longitud' => -99.1000],
-      ['cadena_id' => $cadena3, 'sucursal_id' => 'SUC001', 'nombre' => 'Similares Oeste', 'calle' => 'Calle Oeste', 'numero_ext' => '654', 'numero_int' => null, 'colonia' => 'Oeste', 'latitud' => 19.4100, 'longitud' => -99.1600],
+      ['cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'nombre' => 'Del Ahorro Hermanas', 'calle' => 'Boulevard Ciudades Hermanas', 'numero_ext' => '75', 'numero_int' => null, 'colonia' => 'Guadalupe', 'latitud' => 24.79139552895991, 'longitud' =>  -107.39312697344862],
+      ['cadena_id' => $cadena1, 'sucursal_id' => 'SUC002', 'nombre' => 'Del Ahorro Colinas', 'calle' => 'Prolongacion Alvaro Obregon', 'numero_ext' => '2891', 'numero_int' => null, 'colonia' => 'Montebello', 'latitud' => 24.78041311629486, 'longitud' => -107.39407371994207],
+      ['cadena_id' => $cadena2, 'sucursal_id' => 'SUC001', 'nombre' => 'Guadalajara Hermanas', 'calle' => 'Boulevard Ciudades Hermanas', 'numero_ext' => '75', 'numero_int' => null, 'colonia' => 'Guadalupe', 'latitud' => 24.791902011632253, 'longitud' => -107.3926441758417],
+      ['cadena_id' => $cadena2, 'sucursal_id' => 'SUC002', 'nombre' => 'Guadalajara Bravo', 'calle' => 'Gral. Ignacio Ramirez', 'numero_ext' => '768', 'numero_int' => null, 'colonia' => '', 'latitud' => 24.797952074443508, 'longitud' => -107.40166906569905],
+      ['cadena_id' => $cadena3, 'sucursal_id' => 'SUC001', 'nombre' => 'Similares Constitucion #35', 'calle' => 'Av. Nicolas Bravo', 'numero_ext' => '654', 'numero_int' => null, 'colonia' => 'Oeste', 'latitud' => 19.4100, 'longitud' => -99.1600],
+      ['cadena_id' => $cadena3, 'sucursal_id' => 'SUC002', 'nombre' => 'Similares Bravo', 'calle' => 'Av. Nicolas Bravo', 'numero_ext' => '1578', 'numero_int' => null, 'colonia' => 'Morelos', 'latitud' => 24.788794, 'longitud' => -107.400675],
     ]);
 
     // Create Empleados
@@ -109,14 +108,14 @@ class DatabaseSeeder extends Seeder
 
     // Create Medicamentos
     $medicamentos = [
-      ['nombre' => 'Paracetamol 500mg', 'descripcion' => 'Analgésico y antipirético', 'unidad_medida' => 'mg', 'unidades' => 'comprimidos'],
-      ['nombre' => 'Ibuprofeno 400mg', 'descripcion' => 'Antiinflamatorio no esteroideo', 'unidad_medida' => 'mg', 'unidades' => 'comprimidos'],
-      ['nombre' => 'Amoxicilina 500mg', 'descripcion' => 'Antibiótico de amplio espectro', 'unidad_medida' => 'mg', 'unidades' => 'cápsulas'],
-      ['nombre' => 'Omeprazol 20mg', 'descripcion' => 'Inhibidor de bomba de protones', 'unidad_medida' => 'mg', 'unidades' => 'cápsulas'],
-      ['nombre' => 'Losartán 50mg', 'descripcion' => 'Antihipertensivo', 'unidad_medida' => 'mg', 'unidades' => 'comprimidos'],
-      ['nombre' => 'Metformina 850mg', 'descripcion' => 'Antidiabético oral', 'unidad_medida' => 'mg', 'unidades' => 'comprimidos'],
-      ['nombre' => 'Atorvastatina 20mg', 'descripcion' => 'Hipolipemiante', 'unidad_medida' => 'mg', 'unidades' => 'comprimidos'],
-      ['nombre' => 'Aspirina 100mg', 'descripcion' => 'Antiagregante plaquetario', 'unidad_medida' => 'mg', 'unidades' => 'comprimidos'],
+      ['nombre' => 'Paracetamol 500mg', 'descripcion' => 'Analgésico y antipirético', 'unidad_medida' => 'mg', 'unidades' => '20 tabletas'],
+      ['nombre' => 'Ibuprofeno 400mg', 'descripcion' => 'Antiinflamatorio no esteroideo', 'unidad_medida' => 'mg', 'unidades' => '20 tabletas'],
+      ['nombre' => 'Amoxicilina 500mg', 'descripcion' => 'Antibiótico de amplio espectro', 'unidad_medida' => 'mg', 'unidades' => '20 tabletas'],
+      ['nombre' => 'Omeprazol 20mg', 'descripcion' => 'Inhibidor de bomba de protones', 'unidad_medida' => 'mg', 'unidades' => '20 tabletas'],
+      ['nombre' => 'Losartán 50mg', 'descripcion' => 'Antihipertensivo', 'unidad_medida' => 'mg', 'unidades' => '20 tabletas'],
+      ['nombre' => 'Metformina 850mg', 'descripcion' => 'Antidiabético oral', 'unidad_medida' => 'mg', 'unidades' => '20 tabletas'],
+      ['nombre' => 'Atorvastatina 20mg', 'descripcion' => 'Hipolipemiante', 'unidad_medida' => 'mg', 'unidades' => '20 tabletas'],
+      ['nombre' => 'Aspirina 100mg', 'descripcion' => 'Antiagregante plaquetario', 'unidad_medida' => 'mg', 'unidades' => '20 tabletas'],
     ];
 
     foreach ($medicamentos as $med) {
@@ -133,7 +132,7 @@ class DatabaseSeeder extends Seeder
           'cadena_id' => $sucursal->cadena_id,
           'sucursal_id' => $sucursal->sucursal_id,
           'medicamento_id' => $medId,
-          'cantidad' => rand(10, 200),
+          'cantidad' => rand(5, 20),
         ]);
       }
     }
@@ -147,7 +146,7 @@ class DatabaseSeeder extends Seeder
       'fecha_entrega' => now()->subDays(2),
       'estado' => 'completado',
       'costo_total' => 250.50,
-    ], 'pedido_id');
+    ], 'folio_pedido');
 
     $pedido2 = DB::table('pedidos')->insertGetId([
       'paciente_id' => $pacienteUser2->user_id,
@@ -157,26 +156,26 @@ class DatabaseSeeder extends Seeder
       'fecha_entrega' => null,
       'estado' => 'en_proceso',
       'costo_total' => 180.00,
-    ], 'pedido_id');
+    ], 'folio_pedido');
 
     // Create Lineas Pedidos
     DB::table('lineas_pedidos')->insert([
-      ['pedido_id' => $pedido1, 'linea_id' => 1, 'medicamento_id' => 1, 'cantidad_solicitada' => 2, 'precio_unitario' => 50.00],
-      ['pedido_id' => $pedido1, 'linea_id' => 2, 'medicamento_id' => 2, 'cantidad_solicitada' => 3, 'precio_unitario' => 75.00],
-      ['pedido_id' => $pedido2, 'linea_id' => 1, 'medicamento_id' => 3, 'cantidad_solicitada' => 1, 'precio_unitario' => 180.00],
+      ['folio_pedido' => $pedido1, 'id_liena_pedido' => 1, 'medicamento_id' => 1, 'cantidad_solicitada' => 2, 'precio_unitario' => 50.00],
+      ['folio_pedido' => $pedido1, 'id_liena_pedido' => 2, 'medicamento_id' => 2, 'cantidad_solicitada' => 3, 'precio_unitario' => 75.00],
+      ['folio_pedido' => $pedido2, 'id_liena_pedido' => 1, 'medicamento_id' => 3, 'cantidad_solicitada' => 1, 'precio_unitario' => 180.00],
     ]);
 
     // Create Detalle Lineas Pedidos
     DB::table('detalle_lineas_pedidos')->insert([
-      ['pedido_id' => $pedido1, 'linea_id' => 1, 'cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 2, 'cantidad_recolectada' => 2],
-      ['pedido_id' => $pedido1, 'linea_id' => 2, 'cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 3, 'cantidad_recolectada' => 3],
-      ['pedido_id' => $pedido2, 'linea_id' => 1, 'cadena_id' => $cadena2, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 1, 'cantidad_recolectada' => 0],
+      ['folio_pedido' => $pedido1, 'id_liena_pedido' => 1, 'cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 2, 'cantidad_recolectada' => 2],
+      ['folio_pedido' => $pedido1, 'id_liena_pedido' => 2, 'cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 3, 'cantidad_recolectada' => 3],
+      ['folio_pedido' => $pedido2, 'id_liena_pedido' => 1, 'cadena_id' => $cadena2, 'sucursal_id' => 'SUC001', 'cantidad_asignada' => 1, 'cantidad_recolectada' => 0],
     ]);
 
     // Create Ruta Recoleccion
     DB::table('ruta_recoleccion')->insert([
-      ['pedido_id' => $pedido1, 'cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'orden_visita' => 1, 'estado_recoleccion' => 'completado', 'fecha_hora_visita' => now()->subDays(2)],
-      ['pedido_id' => $pedido2, 'cadena_id' => $cadena2, 'sucursal_id' => 'SUC001', 'orden_visita' => 1, 'estado_recoleccion' => 'pendiente', 'fecha_hora_visita' => null],
+      ['folio_pedido' => $pedido1, 'cadena_id' => $cadena1, 'sucursal_id' => 'SUC001', 'orden_visita' => 1, 'estado_recoleccion' => 'completado', 'fecha_hora_visita' => now()->subDays(2)],
+      ['folio_pedido' => $pedido2, 'cadena_id' => $cadena2, 'sucursal_id' => 'SUC001', 'orden_visita' => 1, 'estado_recoleccion' => 'pendiente', 'fecha_hora_visita' => null],
     ]);
 
     // Create Notificaciones

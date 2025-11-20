@@ -9,17 +9,16 @@ return new class extends Migration
   public function up(): void
   {
     Schema::create('ruta_recoleccion', function (Blueprint $table) {
-      $table->unsignedBigInteger('pedido_id');
+      
       $table->string('cadena_id', 50);
       $table->string('sucursal_id', 50);
-      $table->integer('orden_visita');
-      $table->string('estado_recoleccion', 50);
-      $table->dateTime('fecha_hora_visita')->nullable();
+      $table->integer('folio_pedido');
+      $table->integer('orden_recoleccion');
 
-      $table->primary(['pedido_id', 'cadena_id', 'sucursal_id'], 'ruta_recoleccion_primary');
+      $table->primary(['folio_pedido', 'cadena_id', 'sucursal_id'], 'ruta_recoleccion_primary');
 
-      $table->foreign('pedido_id')
-        ->references('pedido_id')
+      $table->foreign('folio_pedido')
+        ->references('folio_pedido')
         ->on('pedidos');
 
       $table->foreign(['cadena_id', 'sucursal_id'])

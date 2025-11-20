@@ -12,7 +12,10 @@ return new class extends Migration
       $table->string('cadena_id', 50);
       $table->string('sucursal_id', 50);
       $table->unsignedBigInteger('medicamento_id');
-      $table->integer('cantidad');
+      $table->integer('stock_disponible');
+      $table->integer('minimo');
+      $table->integer('maximo');
+      $table->decimal('precio_unitario',10,2);
 
       $table->primary(['cadena_id', 'sucursal_id', 'medicamento_id']);
 

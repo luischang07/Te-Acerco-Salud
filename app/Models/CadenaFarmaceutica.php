@@ -15,7 +15,7 @@ class CadenaFarmaceutica extends Model
 
   protected $fillable = [
     'razon_social',
-    'name',
+    'nombre',
   ];
 
   public function sucursales(): HasMany
