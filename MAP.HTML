@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pharmacy Map - Te Acerco Salud</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#137fec",
+            "secondary": "#2ECC71",
+            "accent": "#F39C12",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+            "success": "#28A745",
+            "warning": "#FFC107",
+            "danger": "#ff6b6b",
+            "neutral-text": "#617589",
+            "neutral-text-dark": "#90a4b8",
+            "body-text": "#111418",
+            "body-text-dark": "#f0f2f4",
+            "border-light": "#f0f2f4",
+            "border-dark": "#2a3b4c",
+            "card-light": "#ffffff",
+            "card-dark": "#1a2734",
+          },
+          fontFamily: {
+            "display": ["Manrope", "sans-serif"]
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    #map {
+      height: 100%;
+      width: 100%;
+      z-index: 0;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 3px;
+    }
+
+    /* Marker Styles */
+    .custom-marker {
+      background: transparent;
+      border: none;
+    }
+
+    .marker-pin {
+      /* Basic transition for the icon scale */
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .marker-pin:hover {
+      transform: scale(1.1) translateY(-2px);
+    }
+  </style>
+</head>
+
+<body class="font-display bg-background-light dark:bg-background-dark text-body-text dark:text-body-text-dark">
+  <div class="relative flex min-h-screen w-full flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header
+      class="flex items-center justify-between whitespace-nowrap border-b border-border-light dark:border-border-dark px-6 md:px-10 py-3 bg-card-light dark:bg-card-dark backdrop-blur-sm sticky top-0 z-50">
+      <div class="flex items-center gap-4">
+        <div class="size-6 text-primary">
+          <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+          </svg>
+        </div>
+        <h2 class="text-lg font-bold leading-tight tracking-tight">Te Acerco Salud</h2>
+      </div>
+      <nav class="hidden lg:flex flex-1 justify-center gap-8">
+        <a class="text-sm font-medium hover:text-primary transition" href="#">Home</a>
+        <a class="text-sm font-medium hover:text-primary transition" href="#">Orders</a>
+        <a class="text-primary text-sm font-bold" href="#">Pharmacy Map</a>
+        <a class="text-sm font-medium hover:text-primary transition" href="#">Profile</a>
+      </nav>
+      <div class="flex items-center gap-4">
+        <div class="size-10 rounded-full bg-blue-100 flex items-center justify-center text-primary font-bold text-sm">US
+        </div>
+        <button class="lg:hidden"><span class="material-symbols-outlined">menu</span></button>
+      </div>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="flex flex-1 flex-col lg:flex-row overflow-hidden h-[calc(100vh-64px)]">
+
+      <!-- Sidebar -->
+      <aside
+        class="w-full lg:w-[420px] lg:min-w-[420px] flex flex-col bg-card-light dark:bg-card-dark lg:border-r border-border-light dark:border-border-dark p-4 sm:p-6 space-y-4 z-20 shadow-lg lg:shadow-none">
+        <div>
+          <h1 class="text-3xl font-black leading-tight">Find a Pharmacy</h1>
+          <p class="text-neutral-text text-base mt-1">Select a pharmacy that has your medication in stock</p>
+        </div>
+
+        <!-- Search -->
+        <div class="relative flex items-center group">
+          <div
+            class="flex w-full items-stretch rounded-lg h-12 border border-border-light dark:border-border-dark focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all bg-background-light dark:bg-background-dark">
+            <div class="flex items-center justify-center pl-4 text-neutral-text"><span
+                class="material-symbols-outlined">search</span></div>
+            <input id="searchInput"
+              class="flex-1 bg-transparent border-none px-4 text-base focus:ring-0 placeholder:text-neutral-text"
+              placeholder="Search location..." />
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+          <button
+            class="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-background-light dark:bg-background-dark px-3 hover:bg-border-light transition-colors">
+            <span class="material-symbols-outlined text-lg">swap_vert</span><span class="text-sm font-medium">Sort by
+              distance</span>
+          </button>
+          <button id="filterOpen" onclick="toggleFilter('open')"
+            class="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-background-light dark:bg-background-dark px-3 hover:bg-border-light transition-colors">
+            <span class="material-symbols-outlined text-lg">schedule</span><span class="text-sm font-medium">Open
+              Now</span>
+          </button>
+          <button id="filter24h" onclick="toggleFilter('24h')"
+            class="flex h-9 shrink-0 items-center gap-2 rounded-lg bg-background-light dark:bg-background-dark px-3 hover:bg-border-light transition-colors">
+            <span class="material-symbols-outlined text-lg">history</span><span class="text-sm font-medium">24
+              Hours</span>
+          </button>
+        </div>
+
+        <!-- List -->
+        <div id="pharmacyList" class="flex-1 overflow-y-auto space-y-3 pr-1 custom-scrollbar"></div>
+      </aside>
+
+      <!-- Map Area -->
+      <div class="flex-1 relative h-[50vh] lg:h-auto">
+        <div id="map"></div>
+
+        <!-- Detail Card Overlay -->
+        <div id="pharmacyDetailCard"
+          class="hidden absolute top-0 lg:left-6 lg:top-6 lg:w-96 p-4 lg:p-0 z-[1000] w-full">
+          <div
+            class="bg-card-light dark:bg-card-dark rounded-xl shadow-2xl p-6 space-y-4 border border-border-light dark:border-border-dark animate-fade-in-up relative">
+            <button onclick="closeDetailCard()"
+              class="absolute top-4 right-4 text-neutral-text hover:text-body-text"><span
+                class="material-symbols-outlined">close</span></button>
+
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-2xl text-primary">local_pharmacy</span>
+              </div>
+              <div>
+                <h2 id="detailName" class="text-xl font-bold"></h2>
+                <p id="detailAddress" class="text-sm text-neutral-text"></p>
+              </div>
+            </div>
+
+            <div class="border-t border-border-light dark:border-border-dark pt-4 space-y-2">
+              <h4 class="font-semibold text-sm">Operating Hours</h4>
+              <div class="text-sm text-neutral-text space-y-1">
+                <div class="flex justify-between"><span class="font-medium text-body-text">Today</span><span
+                    id="detailHoursToday"></span></div>
+                <div class="flex justify-between"><span>Mon - Fri</span><span id="detailHoursWeekday"></span></div>
+                <div class="flex justify-between"><span>Sat - Sun</span><span id="detailHoursWeekend"></span></div>
+              </div>
+            </div>
+
+            <div class="border-t border-border-light dark:border-border-dark pt-4">
+              <h4 class="font-semibold text-sm mb-1">Contact</h4>
+              <p id="detailPhone" class="text-sm text-neutral-text"></p>
+            </div>
+
+            <div class="border-t border-border-light dark:border-border-dark pt-4 flex items-center gap-2">
+              <span id="stockIcon" class="material-symbols-outlined text-lg"></span>
+              <span id="stockText" class="text-sm font-medium"></span>
+            </div>
+
+            <div class="pt-2">
+              <button onclick="selectPharmacyAction()"
+                class="w-full h-12 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition shadow-lg shadow-primary/20">Select
+                Pharmacy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script>
+    // Note: Using real Lat/Lng coordinates for accurate mapping
+    const pharmacies = [
+      {
+        id: 1,
+        name: "Farmacia del Ahorro",
+        address: "Av. Insurgentes Sur 123, Roma Nte.",
+        distance: "1.2 km",
+        status: "Open",
+        statusClass: "success",
+        closeTime: "Closes at 9:00 PM",
+        lat: 19.415,  // Latitude
+        lng: -99.165, // Longitude
+        stock: true,
+        phone: "+52 55 1234 5678",
+        is24Hours: false,
+        hours: { today: "8:00 AM - 9:00 PM", weekday: "8:00 AM - 9:00 PM", weekend: "9:00 AM - 6:00 PM" }
+      },
+      {
+        id: 2,
+        name: "Farmacias San Pablo",
+        address: "Calle de Durango 200, Condesa",
+        distance: "2.5 km",
+        status: "Open",
+        statusClass: "success",
+        closeTime: "Open 24 Hours",
+        lat: 19.420,
+        lng: -99.170,
+        stock: true,
+        phone: "+52 55 9876 5432",
+        is24Hours: true,
+        hours: { today: "24 Hours", weekday: "24 Hours", weekend: "24 Hours" }
+      },
+      {
+        id: 3,
+        name: "Farmacia Guadalajara",
+        address: "Av. Revolución 550, San Pedro",
+        distance: "3.1 km",
+        status: "Closed",
+        statusClass: "danger",
+        closeTime: "Opens at 8:00 AM",
+        lat: 19.390,
+        lng: -99.185,
+        stock: false,
+        phone: "+52 55 4567 8901",
+        is24Hours: false,
+        hours: { today: "Closed", weekday: "8:00 AM - 10:00 PM", weekend: "9:00 AM - 8:00 PM" }
+      },
+      {
+        id: 4,
+        name: "Farmacia Benavides",
+        address: "Blvd. Miguel de Cervantes 789",
+        distance: "4.2 km",
+        status: "Open",
+        statusClass: "success",
+        closeTime: "Closes at 10:00 PM",
+        lat: 19.435,
+        lng: -99.195,
+        stock: true,
+        phone: "+52 55 7654 3210",
+        is24Hours: false,
+        hours: { today: "8:00 AM - 10:00 PM", weekday: "8:00 AM - 10:00 PM", weekend: "10:00 AM - 6:00 PM" }
+      }
+    ];
+
+    let map;
+    let markers = {};
+    let selectedId = null;
+    let activeFilter = 'all';
+
+    // --- Enhanced Icon Creator ---
+    // This creates a composed icon: A white div (circle) layered BEHIND the pin icon
+    const createIcon = (colorClass, isSelected) => {
+      const iconSizeClass = isSelected ? 'text-5xl' : 'text-4xl';
+      // Adjust dot size and position based on the pin size so it fits in the hole
+      const dotClass = isSelected ? 'w-4 h-4 top-[10px]' : 'w-3 h-3 top-[8px]';
+
+      // Dynamic anchor point ensuring the tip of the pin touches the coordinate
+      // [x, y] relative to top-left. Bottom-center of the icon.
+      const anchorPoint = isSelected ? [24, 48] : [20, 36];
+
+      return L.divIcon({
+        className: 'custom-marker',
+        html: `
+                    <div class="relative flex justify-center w-full h-full">
+                        <!-- White background for the pin hole -->
+                        <div class="absolute ${dotClass} bg-white rounded-full shadow-sm z-0"></div>
+                        <!-- The Pin Icon -->
+                        <span class="material-symbols-outlined ${iconSizeClass} ${colorClass} marker-pin drop-shadow-md relative z-10">location_on</span>
+                    </div>
+                `,
+        iconSize: isSelected ? [48, 48] : [40, 40],
+        iconAnchor: anchorPoint,
+        popupAnchor: [0, -40]
+      });
+    };
+
+    const defaultIcon = createIcon('text-primary', false);
+    const selectedIcon = createIcon('text-red-600', true);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initMap();
+      renderList();
+      document.getElementById('searchInput').addEventListener('input', (e) => renderList(e.target.value));
+    });
+
+    function initMap() {
+      map = L.map('map', { zoomControl: false }).setView([19.415, -99.165], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+      L.control.zoom({ position: 'topright' }).addTo(map);
+
+      pharmacies.forEach(p => {
+        // Creating marker using Lat/Lng from data
+        const marker = L.marker([p.lat, p.lng], { icon: defaultIcon }).addTo(map);
+        marker.on('click', () => selectPharmacy(p.id));
+        markers[p.id] = marker;
+      });
+    }
+
+    function toggleFilter(filterType) {
+      const btnOpen = document.getElementById('filterOpen');
+      const btn24h = document.getElementById('filter24h');
+      const activeClass = "bg-primary/20 text-primary font-bold ring-1 ring-primary/20";
+      const inactiveClass = "bg-background-light dark:bg-background-dark hover:bg-border-light";
+
+      if (activeFilter === filterType) activeFilter = 'all';
+      else activeFilter = filterType;
+
+      // Reset classes
+      btnOpen.className = `flex h-9 shrink-0 items-center gap-2 rounded-lg px-3 transition-colors ${activeFilter === 'open' ? activeClass : inactiveClass}`;
+      btn24h.className = `flex h-9 shrink-0 items-center gap-2 rounded-lg px-3 transition-colors ${activeFilter === '24h' ? activeClass : inactiveClass}`;
+
+      renderList(document.getElementById('searchInput').value);
+    }
+
+    function selectPharmacy(id) {
+      selectedId = id;
+      const p = pharmacies.find(x => x.id === id);
+      if (!p) return;
+
+      Object.keys(markers).forEach(k => {
+        const isTarget = parseInt(k) === id;
+        markers[k].setIcon(isTarget ? selectedIcon : defaultIcon);
+        markers[k].setZIndexOffset(isTarget ? 1000 : 0);
+      });
+
+      map.flyTo([p.lat, p.lng], 15, { animate: true, duration: 0.8 });
+      updateDetailCard(p);
+      renderList(document.getElementById('searchInput').value);
+    }
+
+    function updateDetailCard(pharmacy) {
+      const card = document.getElementById('pharmacyDetailCard');
+      card.classList.remove('hidden');
+      document.getElementById('detailName').textContent = pharmacy.name;
+      document.getElementById('detailAddress').textContent = pharmacy.address;
+      document.getElementById('detailHoursToday').textContent = pharmacy.hours.today;
+      document.getElementById('detailHoursWeekday').textContent = pharmacy.hours.weekday;
+      document.getElementById('detailHoursWeekend').textContent = pharmacy.hours.weekend;
+      document.getElementById('detailPhone').textContent = pharmacy.phone;
+
+      const stockIcon = document.getElementById('stockIcon');
+      const stockText = document.getElementById('stockText');
+      if (pharmacy.stock) {
+        stockIcon.textContent = 'check_circle';
+        stockIcon.className = 'material-symbols-outlined text-lg text-success';
+        stockText.textContent = 'In Stock';
+        stockText.className = 'text-sm font-medium text-success';
+      } else {
+        stockIcon.textContent = 'cancel';
+        stockIcon.className = 'material-symbols-outlined text-lg text-danger';
+        stockText.textContent = 'Out of Stock';
+        stockText.className = 'text-sm font-medium text-danger';
+      }
+    }
+
+    function closeDetailCard() {
+      document.getElementById('pharmacyDetailCard').classList.add('hidden');
+      selectedId = null;
+      Object.keys(markers).forEach(k => {
+        markers[k].setIcon(defaultIcon);
+        markers[k].setZIndexOffset(0);
+      });
+      renderList(document.getElementById('searchInput').value);
+    }
+
+    function selectPharmacyAction() {
+      alert(`Pharmacy ID ${selectedId} selected!`);
+    }
+
+    function renderList(searchQuery = "") {
+      const container = document.getElementById('pharmacyList');
+      container.innerHTML = "";
+
+      const filtered = pharmacies.filter(p => {
+        const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.address.toLowerCase().includes(searchQuery.toLowerCase());
+        if (!matchSearch) return false;
+        if (activeFilter === 'open' && p.status !== 'Open') return false;
+        if (activeFilter === '24h' && !p.is24Hours) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="text-center py-10"><p class="text-neutral-text">No pharmacies found.</p></div>`;
+        return;
+      }
+
+      filtered.forEach(p => {
+        const isSelected = selectedId === p.id;
+        const card = document.createElement('div');
+        const baseClasses = "p-4 rounded-xl cursor-pointer transition-all duration-200 border";
+        const selectedClasses = "border-primary bg-primary/10 dark:bg-primary/20 shadow-md ring-1 ring-primary";
+        const defaultClasses = "border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark hover:border-primary/50 hover:bg-background-light";
+        const badgeColor = p.status === 'Open' ? 'text-success bg-success/20' : 'text-danger bg-danger/20';
+
+        card.className = `${baseClasses} ${isSelected ? selectedClasses : defaultClasses}`;
+        card.innerHTML = `
+                    <div class="flex justify-between items-start gap-3">
+                        <div>
+                            <h3 class="font-bold">${p.name}</h3>
+                            <p class="text-sm text-neutral-text">${p.address}</p>
+                            <p class="text-sm text-neutral-text mt-1">${p.distance} away</p>
+                        </div>
+                        <div class="text-xs font-bold ${badgeColor} px-2 py-1 rounded-full uppercase tracking-wide">${p.status}</div>
+                    </div>
+                    <p class="text-xs text-neutral-text mt-2 font-medium">${p.closeTime}</p>
+                `;
+        card.onclick = () => selectPharmacy(p.id);
+        container.appendChild(card);
+        if (isSelected) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    }
+  </script>
+</body>
+
+</html>
